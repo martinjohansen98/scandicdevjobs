@@ -5,6 +5,18 @@
 
 
     /* --- Top Level Filters --- */
+
+    // TODO get tags fropm DB
+    // Topfilters should be replaced,
+    // we want to group the tags by Tag Category and have one dropdown for each
+    // TODO extend Tag in backend with imageId / image url / unicode caracter
+
+    // programing languages
+    
+    // technologies, DevOps, security, Testautomation, docker, kubernetes etc
+    // Cloud?
+    // Design?
+    // Business?
     let topFilters = [
       { id: 'Java',       label: 'Java',      icon: '☕' },
       { id: 'C/C++',      label: 'C/C++',     icon: '💻' },
@@ -50,238 +62,238 @@
 
     
 
-    let josbs: Job[] = [];
+    let jobs: Job[] = [];
 
     /* --- Dummy Job Listings Data --- */
     
   
-    let jobs: Job[] = [
-      {
-        id: 1,
-        title: 'Frontend Developer',
-        city: 'Stockholm',
-        category: 'tech',
-        description: 'Develop engaging user interfaces with modern frameworks.',
-        companyLogo: 'https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg',
-        salaryRange: '$50k - $70k',
-        tags: ['JavaScript', 'React'],
-        filterJob: ['Java', 'Python'],
-        address: 'Sveavägen 1, Stockholm, Sweden',
-        lat: 59.33258,
-        lng: 18.0649
-      },
-      {
-        id: 2,
-        title: 'UI/UX Designer',
-        city: 'Gothenburg',
-        category: 'design',
-        description: 'Design delightful digital experiences that users love.',
-        companyLogo: 'https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg',
-        salaryRange: '$40k - $60k',
-        tags: ['Sketch', 'Figma'],
-        filterJob: ['UX/UI', 'Business'],
-        address: 'Östra Hamngatan 10, Gothenburg, Sweden',
-        lat: 57.7089,
-        lng: 11.9746
-      },
-      {
-        id: 3,
-        title: 'Digital Marketer',
-        city: 'Malmo',
-        category: 'marketing',
-        description: 'Promote our brand and reach new audiences across channels.',
-        companyLogo: 'https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg',
-        salaryRange: '$45k - $65k',
-        tags: ['SEO', 'Content'],
-        filterJob: ['Business', 'Manager'],
-        address: 'Stortorget, Malmo, Sweden',
-        lat: 55.6050,
-        lng: 13.0038
-      },
-      {
-        id: 4,
-        title: 'Backend Developer',
-        city: 'Uppsala',
-        category: 'tech',
-        description: 'Build robust server-side applications and APIs.',
-        companyLogo: 'https://upload.wikimedia.org/wikipedia/commons/0/05/Facebook_Logo_%282019%29.png',
-        salaryRange: '$55k - $75k',
-        tags: ['API', '.NET Framework'],
-        filterJob: ['C#/.NET', 'C/C++'],
-        address: 'Universitetsvägen 1, Uppsala, Sweden',
-        lat: 59.8586,
-        lng: 17.6389
-      },
-      {
-        id: 5,
-        title: 'Full Stack Engineer',
-        city: 'Stockholm',
-        category: 'tech',
-        description: 'Work on both front and backend tasks in a dynamic environment.',
-        companyLogo: 'https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg',
-        salaryRange: '$60k - $80k',
-        tags: ['Node.js', 'GraphQL'],
-        filterJob: ['Java', 'C/C++', 'Python'],
-        address: 'Sergels Torg, Stockholm, Sweden',
-        lat: 59.3293,
-        lng: 18.0686
-      },
-      {
-        id: 7,
-        title: 'Product Designer',
-        city: 'Gothenburg',
-        category: 'design',
-        description: 'Create intuitive product designs that drive engagement.',
-        companyLogo: 'https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg',
-        salaryRange: '$45k - $65k',
-        tags: ['Adobe XD', 'Illustrator'],
-        filterJob: ['UX/UI', 'Business'],
-        address: 'Kungstorget, Gothenburg, Sweden',
-        lat: 57.7089,
-        lng: 11.9746
-      },
-      {
-        id: 8,
-        title: 'Product Designer',
-        city: 'Gothenburg',
-        category: 'design',
-        description: 'Create intuitive product designs that drive engagement.',
-        companyLogo: 'https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg',
-        salaryRange: '$45k - $65k',
-        tags: ['Adobe XD', 'Illustrator'],
-        filterJob: ['UX/UI', 'QA/Test'],
-        address: 'Kungstorget, Gothenburg, Sweden',
-        lat: 57.7089,
-        lng: 11.9746
-      },
-      {
-        id: 9,
-        title: 'Product Designer',
-        city: 'Gothenburg',
-        category: 'design',
-        description: 'Create intuitive product designs that drive engagement.',
-        companyLogo: 'https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg',
-        salaryRange: '$45k - $65k',
-        tags: ['Adobe XD', 'Illustrator'],
-        filterJob: ['UX/UI', 'QA/Test'],
-        address: 'Kungstorget, Gothenburg, Sweden',
-        lat: 57.7089,
-        lng: 11.9746
-      },
-      {
-        id: 10,
-        title: 'Product Designer',
-        city: 'Gothenburg',
-        category: 'design',
-        description: 'Create intuitive product designs that drive engagement.',
-        companyLogo: 'https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg',
-        salaryRange: '$45k - $65k',
-        tags: ['Adobe XD', 'Illustrator'],
-        filterJob: ['UX/UI', 'QA/Test'],
-        address: 'Kungstorget, Gothenburg, Sweden',
-        lat: 57.7089,
-        lng: 11.9746
-      },
-      {
-        id: 11,
-        title: 'Product Designer',
-        city: 'Gothenburg',
-        category: 'design',
-        description: 'Create intuitive product designs that drive engagement.',
-        companyLogo: 'https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg',
-        salaryRange: '$45k - $65k',
-        tags: ['Adobe XD', 'Illustrator'],
-        filterJob: ['UX/UI', 'QA/Test'],
-        address: 'Kungstorget, Gothenburg, Sweden',
-        lat: 57.7089,
-        lng: 11.9746
-      },
-      // Additional jobs demonstrating new filters:
-      {
-        id: 12,
-        title: 'Network Engineer',
-        city: 'Stockholm',
-        category: 'tech',
-        description: 'Design and manage complex network infrastructures.',
-        companyLogo: 'https://via.placeholder.com/64?text=Network',
-        salaryRange: '$55k - $75k',
-        tags: ['Networking'],
-        filterJob: ['Network', 'Security'],
-        address: 'Drottninggatan 2, Stockholm, Sweden',
-        lat: 59.3326,
-        lng: 18.0649
-      },
-      {
-        id: 13,
-        title: 'Blockchain Developer',
-        city: 'Gothenburg',
-        category: 'tech',
-        description: 'Develop decentralized applications and smart contracts.',
-        companyLogo: 'https://via.placeholder.com/64?text=Blockchain',
-        salaryRange: '$65k - $85k',
-        tags: ['Blockchain', 'Solidity'],
-        filterJob: ['Blockchain', 'Python'],
-        address: 'Västra Hamngatan, Gothenburg, Sweden',
-        lat: 57.7089,
-        lng: 11.9746
-      },
-      {
-        id: 14,
-        title: 'DevOps Engineer',
-        city: 'Malmo',
-        category: 'tech',
-        description: 'Implement continuous integration and deployment pipelines.',
-        companyLogo: 'https://via.placeholder.com/64?text=DevOps',
-        salaryRange: '$60k - $80k',
-        tags: ['AWS', 'CI/CD'],
-        filterJob: ['DevOps', 'System', 'C/C++'],
-        address: 'Lilla Varvsgatan, Malmo, Sweden',
-        lat: 55.6050,
-        lng: 13.0038
-      },
-      {
-        id: 15,
-        title: 'Data Scientist',
-        city: 'Uppsala',
-        category: 'tech',
-        description: 'Analyze large datasets to derive actionable insights.',
-        companyLogo: 'https://via.placeholder.com/64?text=Data',
-        salaryRange: '$70k - $90k',
-        tags: ['Python', 'R'],
-        filterJob: ['Data', 'AI/ML', 'Python'],
-        address: 'Carolina Rediviva, Uppsala, Sweden',
-        lat: 59.8586,
-        lng: 17.6389
-      },
-      {
-        id: 16,
-        title: 'Game Developer',
-        city: 'Stockholm',
-        category: 'tech',
-        description: 'Develop engaging games for various platforms.',
-        companyLogo: 'https://via.placeholder.com/64?text=GameDev',
-        salaryRange: '$60k - $80k',
-        tags: ['Unity', 'C#'],
-        filterJob: ['GameDev', 'C/C++'],
-        address: 'Birger Jarlsgatan, Stockholm, Sweden',
-        lat: 59.33258,
-        lng: 18.0649
-      },
-      {
-        id: 17,
-        title: 'QA Tester',
-        city: 'Gothenburg',
-        category: 'tech',
-        description: 'Ensure quality through rigorous testing and automation.',
-        companyLogo: 'https://via.placeholder.com/64?text=QA',
-        salaryRange: '$40k - $60k',
-        tags: ['Selenium', 'JMeter'],
-        filterJob: ['QA/Test', 'Support'],
-        address: 'Kungsportsavenyen, Gothenburg, Sweden',
-        lat: 57.7089,
-        lng: 11.9746
-      }
-    ];
+    // let jobs: Job[] = [
+    //   {
+    //     id: 1,
+    //     title: 'Frontend Developer',
+    //     city: 'Stockholm',
+    //     category: 'tech',
+    //     description: 'Develop engaging user interfaces with modern frameworks.',
+    //     companyLogo: 'https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg',
+    //     salaryRange: '$50k - $70k',
+    //     tags: ['JavaScript', 'React'],
+    //     filterJob: ['Java', 'Python'],
+    //     address: 'Sveavägen 1, Stockholm, Sweden',
+    //     lat: 59.33258,
+    //     lng: 18.0649
+    //   },
+    //   {
+    //     id: 2,
+    //     title: 'UI/UX Designer',
+    //     city: 'Gothenburg',
+    //     category: 'design',
+    //     description: 'Design delightful digital experiences that users love.',
+    //     companyLogo: 'https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg',
+    //     salaryRange: '$40k - $60k',
+    //     tags: ['Sketch', 'Figma'],
+    //     filterJob: ['UX/UI', 'Business'],
+    //     address: 'Östra Hamngatan 10, Gothenburg, Sweden',
+    //     lat: 57.7089,
+    //     lng: 11.9746
+    //   },
+    //   {
+    //     id: 3,
+    //     title: 'Digital Marketer',
+    //     city: 'Malmo',
+    //     category: 'marketing',
+    //     description: 'Promote our brand and reach new audiences across channels.',
+    //     companyLogo: 'https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg',
+    //     salaryRange: '$45k - $65k',
+    //     tags: ['SEO', 'Content'],
+    //     filterJob: ['Business', 'Manager'],
+    //     address: 'Stortorget, Malmo, Sweden',
+    //     lat: 55.6050,
+    //     lng: 13.0038
+    //   },
+    //   {
+    //     id: 4,
+    //     title: 'Backend Developer',
+    //     city: 'Uppsala',
+    //     category: 'tech',
+    //     description: 'Build robust server-side applications and APIs.',
+    //     companyLogo: 'https://upload.wikimedia.org/wikipedia/commons/0/05/Facebook_Logo_%282019%29.png',
+    //     salaryRange: '$55k - $75k',
+    //     tags: ['API', '.NET Framework'],
+    //     filterJob: ['C#/.NET', 'C/C++'],
+    //     address: 'Universitetsvägen 1, Uppsala, Sweden',
+    //     lat: 59.8586,
+    //     lng: 17.6389
+    //   },
+    //   {
+    //     id: 5,
+    //     title: 'Full Stack Engineer',
+    //     city: 'Stockholm',
+    //     category: 'tech',
+    //     description: 'Work on both front and backend tasks in a dynamic environment.',
+    //     companyLogo: 'https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg',
+    //     salaryRange: '$60k - $80k',
+    //     tags: ['Node.js', 'GraphQL'],
+    //     filterJob: ['Java', 'C/C++', 'Python'],
+    //     address: 'Sergels Torg, Stockholm, Sweden',
+    //     lat: 59.3293,
+    //     lng: 18.0686
+    //   },
+    //   {
+    //     id: 7,
+    //     title: 'Product Designer',
+    //     city: 'Gothenburg',
+    //     category: 'design',
+    //     description: 'Create intuitive product designs that drive engagement.',
+    //     companyLogo: 'https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg',
+    //     salaryRange: '$45k - $65k',
+    //     tags: ['Adobe XD', 'Illustrator'],
+    //     filterJob: ['UX/UI', 'Business'],
+    //     address: 'Kungstorget, Gothenburg, Sweden',
+    //     lat: 57.7089,
+    //     lng: 11.9746
+    //   },
+    //   {
+    //     id: 8,
+    //     title: 'Product Designer',
+    //     city: 'Gothenburg',
+    //     category: 'design',
+    //     description: 'Create intuitive product designs that drive engagement.',
+    //     companyLogo: 'https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg',
+    //     salaryRange: '$45k - $65k',
+    //     tags: ['Adobe XD', 'Illustrator'],
+    //     filterJob: ['UX/UI', 'QA/Test'],
+    //     address: 'Kungstorget, Gothenburg, Sweden',
+    //     lat: 57.7089,
+    //     lng: 11.9746
+    //   },
+    //   {
+    //     id: 9,
+    //     title: 'Product Designer',
+    //     city: 'Gothenburg',
+    //     category: 'design',
+    //     description: 'Create intuitive product designs that drive engagement.',
+    //     companyLogo: 'https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg',
+    //     salaryRange: '$45k - $65k',
+    //     tags: ['Adobe XD', 'Illustrator'],
+    //     filterJob: ['UX/UI', 'QA/Test'],
+    //     address: 'Kungstorget, Gothenburg, Sweden',
+    //     lat: 57.7089,
+    //     lng: 11.9746
+    //   },
+    //   {
+    //     id: 10,
+    //     title: 'Product Designer',
+    //     city: 'Gothenburg',
+    //     category: 'design',
+    //     description: 'Create intuitive product designs that drive engagement.',
+    //     companyLogo: 'https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg',
+    //     salaryRange: '$45k - $65k',
+    //     tags: ['Adobe XD', 'Illustrator'],
+    //     filterJob: ['UX/UI', 'QA/Test'],
+    //     address: 'Kungstorget, Gothenburg, Sweden',
+    //     lat: 57.7089,
+    //     lng: 11.9746
+    //   },
+    //   {
+    //     id: 11,
+    //     title: 'Product Designer',
+    //     city: 'Gothenburg',
+    //     category: 'design',
+    //     description: 'Create intuitive product designs that drive engagement.',
+    //     companyLogo: 'https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg',
+    //     salaryRange: '$45k - $65k',
+    //     tags: ['Adobe XD', 'Illustrator'],
+    //     filterJob: ['UX/UI', 'QA/Test'],
+    //     address: 'Kungstorget, Gothenburg, Sweden',
+    //     lat: 57.7089,
+    //     lng: 11.9746
+    //   },
+    //   // Additional jobs demonstrating new filters:
+    //   {
+    //     id: 12,
+    //     title: 'Network Engineer',
+    //     city: 'Stockholm',
+    //     category: 'tech',
+    //     description: 'Design and manage complex network infrastructures.',
+    //     companyLogo: 'https://via.placeholder.com/64?text=Network',
+    //     salaryRange: '$55k - $75k',
+    //     tags: ['Networking'],
+    //     filterJob: ['Network', 'Security'],
+    //     address: 'Drottninggatan 2, Stockholm, Sweden',
+    //     lat: 59.3326,
+    //     lng: 18.0649
+    //   },
+    //   {
+    //     id: 13,
+    //     title: 'Blockchain Developer',
+    //     city: 'Gothenburg',
+    //     category: 'tech',
+    //     description: 'Develop decentralized applications and smart contracts.',
+    //     companyLogo: 'https://via.placeholder.com/64?text=Blockchain',
+    //     salaryRange: '$65k - $85k',
+    //     tags: ['Blockchain', 'Solidity'],
+    //     filterJob: ['Blockchain', 'Python'],
+    //     address: 'Västra Hamngatan, Gothenburg, Sweden',
+    //     lat: 57.7089,
+    //     lng: 11.9746
+    //   },
+    //   {
+    //     id: 14,
+    //     title: 'DevOps Engineer',
+    //     city: 'Malmo',
+    //     category: 'tech',
+    //     description: 'Implement continuous integration and deployment pipelines.',
+    //     companyLogo: 'https://via.placeholder.com/64?text=DevOps',
+    //     salaryRange: '$60k - $80k',
+    //     tags: ['AWS', 'CI/CD'],
+    //     filterJob: ['DevOps', 'System', 'C/C++'],
+    //     address: 'Lilla Varvsgatan, Malmo, Sweden',
+    //     lat: 55.6050,
+    //     lng: 13.0038
+    //   },
+    //   {
+    //     id: 15,
+    //     title: 'Data Scientist',
+    //     city: 'Uppsala',
+    //     category: 'tech',
+    //     description: 'Analyze large datasets to derive actionable insights.',
+    //     companyLogo: 'https://via.placeholder.com/64?text=Data',
+    //     salaryRange: '$70k - $90k',
+    //     tags: ['Python', 'R'],
+    //     filterJob: ['Data', 'AI/ML', 'Python'],
+    //     address: 'Carolina Rediviva, Uppsala, Sweden',
+    //     lat: 59.8586,
+    //     lng: 17.6389
+    //   },
+    //   {
+    //     id: 16,
+    //     title: 'Game Developer',
+    //     city: 'Stockholm',
+    //     category: 'tech',
+    //     description: 'Develop engaging games for various platforms.',
+    //     companyLogo: 'https://via.placeholder.com/64?text=GameDev',
+    //     salaryRange: '$60k - $80k',
+    //     tags: ['Unity', 'C#'],
+    //     filterJob: ['GameDev', 'C/C++'],
+    //     address: 'Birger Jarlsgatan, Stockholm, Sweden',
+    //     lat: 59.33258,
+    //     lng: 18.0649
+    //   },
+    //   {
+    //     id: 17,
+    //     title: 'QA Tester',
+    //     city: 'Gothenburg',
+    //     category: 'tech',
+    //     description: 'Ensure quality through rigorous testing and automation.',
+    //     companyLogo: 'https://via.placeholder.com/64?text=QA',
+    //     salaryRange: '$40k - $60k',
+    //     tags: ['Selenium', 'JMeter'],
+    //     filterJob: ['QA/Test', 'Support'],
+    //     address: 'Kungsportsavenyen, Gothenburg, Sweden',
+    //     lat: 57.7089,
+    //     lng: 11.9746
+    //   }
+    // ];
   
     /* --- Dynamic Pagination Setup --- */
     let currentPage = 1;
@@ -329,6 +341,24 @@
     }
   </script>
   
+  <!--TODO förslag vi sparar en siffra som motsvarar % av alla filter och försöker matcha så minst % av alla valda filter är inkluderade,
+  denna n% kan följa en algoritm så att ju fler filter man klickar i ju färre bör vara inkluderade, 
+  med detta kan vi hävda vi har en nytänkande algoritm för att matcha kandidater med jobblistings XD
+  exempel:
+  1 -> 1
+  2 => 1
+  3 => 1
+  4 => 2
+  5 => 2
+  6 => 3
+  7 => 3
+  8 => 3
+  9 => 4
+  10 => 4
+  10+ => 5
+  om för få jobb hittas >25 så sänker vi siffran ett steg tills antal jobb är minst 25 / 2 sidor av jobblistings
+  -->
+
   <div class="job-section flex flex-col h-full">
     <!-- Header & Filters -->
     <header class="p-4 bg-base-200">
