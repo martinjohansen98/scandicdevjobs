@@ -1,4 +1,4 @@
-﻿using ScandicDevJobApi.Models.Enums;
+﻿using ScandicDevJobApi.Models.Enums.Tag;
 
 namespace ScandicDevJobApi.Models
 {

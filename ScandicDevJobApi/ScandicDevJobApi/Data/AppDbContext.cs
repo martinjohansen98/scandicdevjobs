@@ -10,7 +10,8 @@ namespace ScandicDevJobApi.Data
 
         public DbSet<JobListing> Joblistings { get; set; }
         public DbSet<User> Users { get; set; }
-
+        public DbSet<Company> Companies { get; set; }
+        public DbSet<Tag> Tags { get; set; }
 
         // Add more DbSets for other models
     }

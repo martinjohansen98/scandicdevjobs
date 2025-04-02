@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import type { Job } from '$lib/types/Job';
+    import type { JobListing } from '$lib/types/JobListing';
     import { jobList, jobListLoading, jobListError, fetchJobs } from '$lib/stores/jobListingStore';
 
 
@@ -62,7 +62,7 @@
 
     
 
-    let jobs: Job[] = [];
+    let jobs: JobListing[] = [];
 
     /* --- Dummy Job Listings Data --- */
     

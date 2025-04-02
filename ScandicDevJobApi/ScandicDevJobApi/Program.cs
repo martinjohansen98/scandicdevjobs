@@ -7,8 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DBConnection"))); // Use UseSqlServer for SQL Server
 
-// Add CORS policy
-builder.Services.AddCors(options =>
+builder.Services.AddCors(options => // Add CORS policy
+
 {
     options.AddPolicy("AllowFrontend",
         policy =>
@@ -20,6 +20,7 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

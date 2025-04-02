@@ -1,5 +1,5 @@
-// src/lib/types/Job.ts
-export interface Job {
+// src/lib/types/JobListing.ts
+export interface JobListing {
   id: number;
   title: string;
   city: string;
