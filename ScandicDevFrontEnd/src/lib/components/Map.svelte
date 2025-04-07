@@ -2,43 +2,12 @@
 <script lang="ts">
     import { onMount, onDestroy } from 'svelte';
     import 'leaflet/dist/leaflet.css';
+    import type { Joblisting } from '$lib/types/Joblisting';
+    import { jobList, jobListLoading, jobListError, fetchJobs } from '$lib/stores/jobListingStore';
   
     // Default dummy job data for testing.
     // In a real application, this would be passed in as a prop.
-    export let jobs: any[] = [
-      {
-        lat: 59.3293,
-        lng: 18.0686,
-        companyLogo: 'https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg',
-        title: 'Test Job 1',
-        company: 'Google',
-        address: 'Stockholm, Sweden'
-      },
-      {
-        lat: 57.7089,
-        lng: 11.9746,
-        companyLogo: 'https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg',
-        title: 'Test Job 2',
-        company: 'Microsoft',
-        address: 'Gothenburg, Sweden'
-      },
-      {
-        lat: 55.6050,
-        lng: 13.0038,
-        companyLogo: 'https://via.placeholder.com/64?text=Job',
-        title: 'Test Job 3',
-        company: 'Test Company',
-        address: 'Malmo, Sweden'
-      },
-      {
-        lat: 59.8586,
-        lng: 17.6389,
-        companyLogo: 'https://via.placeholder.com/64?text=Job',
-        title: 'Test Job 4',
-        company: 'Another Company',
-        address: 'Uppsala, Sweden'
-      }
-    ];
+    export let jobs: Joblisting[] = [];
   
     // We'll load Leaflet dynamically on the client.
     let map: any;
@@ -70,8 +39,8 @@
   
       // Create and add a new marker for each job.
       jobs.forEach(job => {
-        const marker = L.marker([job.lat, job.lng], {
-          icon: map.getZoom() >= 12 ? createLogoIcon(job.companyLogo) : createClusterIcon()
+        const marker = L.marker([job.latitude, job.longitude], {
+          icon: map.getZoom() >= 12 ? createLogoIcon(job.company?.companyLogoUrl ?? "") : createClusterIcon()
         });
         marker.bindPopup(`
           <div class="p-2">
@@ -86,6 +55,10 @@
     };
   
     onMount(async () => {
+      fetchJobs();
+      jobList.subscribe(value => {
+            jobs = value; // ✅ Sync store data with local variable
+        });
       // Dynamically import Leaflet (runs only on the client).
       const LModule = await import('leaflet');
       L = LModule.default;

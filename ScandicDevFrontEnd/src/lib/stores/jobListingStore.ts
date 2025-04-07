@@ -1,8 +1,8 @@
 import { writable } from 'svelte/store';
-// import { Client, JobListing } from '../../api-client';
-import type { JobListing } from '$lib/types/JobListing';
+// import { Client, JobListing   6} from '../../api-client';
+import type { Joblisting } from '$lib/types/Joblisting';
 
-export const jobList = writable<JobListing[]>([]);
+export const jobList = writable<Joblisting[]>([]);
 export const jobListLoading = writable<boolean>(false);
 export const jobListError = writable<string | null>(null);
 const API_BASE_URL = 'https://localhost:7077'; // Adjust port if needed
@@ -16,7 +16,7 @@ export async function fetchJobs() {
         if (!response.ok) {
             throw new Error(`Error fetching jobs: ${response.statusText}`);
         }
-        const data: JobListing[] = await response.json();
+        const data: Joblisting[] = await response.json();
         jobList.set(data); // ✅ Updates store with fetched jobs
     } catch (err) {
         jobListError.set(err instanceof Error ? err.message : "Unknown error");

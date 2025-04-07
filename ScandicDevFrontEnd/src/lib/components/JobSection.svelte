@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import type { JobListing } from '$lib/types/JobListing';
+    import type { Joblisting } from '$lib/types/Joblisting';
     import { jobList, jobListLoading, jobListError, fetchJobs } from '$lib/stores/jobListingStore';
 
 
@@ -18,31 +18,31 @@
     // Design?
     // Business?
     let topFilters = [
-      { id: 'Java',       label: 'Java',      icon: '☕' },
-      { id: 'C/C++',      label: 'C/C++',     icon: '💻' },
-      { id: 'C#/.NET',    label: 'C#/.NET',   icon: '🔷' },
-      { id: 'PHP',        label: 'PHP',       icon: '🐘' },
-      { id: 'Ruby',       label: 'Ruby',      icon: '💎' },
-      { id: 'Python',     label: 'Python',    icon: '🐍' },
-      { id: 'IT',         label: 'IT',        icon: '🖥️' },
-      { id: 'Rust',       label: 'Rust',      icon: '🦀' },
-      { id: 'Manager',    label: 'Manager',   icon: '👔' },
-      { id: 'Network',    label: 'Network',   icon: '🌐' },
-      { id: 'Security',   label: 'Security',  icon: '🔒' },
-      { id: 'Blockchain', label: 'Blockchain',icon: '⛓️' },
-      { id: 'UX/UI',      label: 'UX/UI',     icon: '🎨' },
-      { id: 'Business',   label: 'Business',  icon: '💼' },
-      { id: 'Support',    label: 'Support',   icon: '🛠️' },
-      { id: 'Architect',  label: 'Architect', icon: '📐' },
-      { id: 'Data',       label: 'Data',      icon: '📊' },
-      { id: 'AI/ML',      label: 'AI/ML',     icon: '🤖' },
-      { id: 'DevOps',     label: 'DevOps',    icon: '⚙️' },
-      { id: 'System',     label: 'System',    icon: '🔧' },
-      { id: 'GameDev',    label: 'GameDev',   icon: '🎮' },
-      { id: 'QA/Test',    label: 'QA/Test',   icon: '🧪' }
+      { id: 0,        label: 'Java',      icon: '☕' },
+      { id: 0,        label: 'C/C++',     icon: '💻' },
+      { id: 1,        label: 'C#/.NET',   icon: '🔷' },
+      { id: 0,        label: 'PHP',       icon: '🐘' },
+      { id: 0,        label: 'Ruby',      icon: '💎' },
+      { id: 5,        label: 'Python',    icon: '🐍' },
+      { id: 0,        label: 'IT',        icon: '🖥️' },
+      { id: 0,        label: 'Rust',      icon: '🦀' },
+      { id: 0,        label: 'Manager',   icon: '👔' },
+      { id: 0,        label: 'Network',   icon: '🌐' },
+      { id: 0,        label: 'Security',  icon: '🔒' },
+      { id: 0,        label: 'Blockchain',icon: '⛓️' },
+      { id: 0,        label: 'UX/UI',     icon: '🎨' },
+      { id: 0,        label: 'Business',  icon: '💼' },
+      { id: 0,        label: 'Support',   icon: '🛠️' },
+      { id: 0,        label: 'Architect', icon: '📐' },
+      { id: 0,        label: 'Data',      icon: '📊' },
+      { id: 0,        label: 'AI/ML',     icon: '🤖' },
+      { id: 0,        label: 'DevOps',    icon: '⚙️' },
+      { id: 0,        label: 'System',    icon: '🔧' },
+      { id: 0,        label: 'GameDev',   icon: '🎮' },
+      { id: 0,        label: 'QA/Test',   icon: '🧪' }
     ];
-    let activeTopFilters: string[] = [];
-    function toggleTopFilter(id: string) {
+    let activeTopFilters: number[] = [];
+    function toggleTopFilter(id: number) {
       if (activeTopFilters.includes(id)) {
         activeTopFilters = activeTopFilters.filter(f => f !== id);
       } else {
@@ -62,7 +62,7 @@
 
     
 
-    let jobs: JobListing[] = [];
+    let jobs: Joblisting[] = [];
 
     /* --- Dummy Job Listings Data --- */
     
@@ -325,7 +325,7 @@
       const matchesCity = activeCity === 'all' || job.city === activeCity;
       const matchesTopFilter =
         activeTopFilters.length === 0 ||
-        activeTopFilters.some(filter => job.filterJob.includes(filter));
+        activeTopFilters.some(filter => job.tags?.map(x => x.id).includes(filter));
       return matchesCity && matchesTopFilter;
     });
   
@@ -400,7 +400,8 @@
             <div class="job-card flex items-center bg-white rounded-lg shadow p-4 h-[96px] mb-2">
               <!-- Company Logo -->
               <div class="mr-4">
-                <img src={job.companyLogo} alt="{job.title} Logo" class="w-16 h-16 object-contain" />
+                <!-- TODO DEFAULT LOGO -->
+                <img src={job.company?.companyLogoUrl ?? ""} alt="{job.title} Logo" class="w-16 h-16 object-contain" /> 
               </div>
               <!-- Job Information -->
               <div class="flex-grow">
@@ -409,10 +410,10 @@
               </div>
               <!-- Salary Range and Tags -->
               <div class="flex flex-col items-end">
-                <span class="text-lg font-bold">{job.salaryRange}</span>
+                <span class="text-lg font-bold">{job.salaryRangeMin} - {job.salaryRangeMax} {job.currency}</span>
                 <div class="mt-2 flex flex-wrap gap-1">
-                  {#each job.tags as tag}
-                    <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">{tag}</span>
+                  {#each job.tags ?? [] as tag}
+                    <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">{tag.name}</span>
                   {/each}
                 </div>
               </div>
