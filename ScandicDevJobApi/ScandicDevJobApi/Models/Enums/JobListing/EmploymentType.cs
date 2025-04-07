@@ -2,8 +2,9 @@
 {
     public enum EmploymentType
     {
-        FulLTime = 0,
-        PartTime = 1,
-        TimeContract = 2,
+        Undefined = 0,
+        FullTime = 1,
+        PartTime = 2,
+        TimeContract = 3,
     }
 }

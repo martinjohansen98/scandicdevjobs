@@ -2,7 +2,7 @@
 {
     public enum TagCategory
     {
-        None = 0,
+        Undefined = 0,
         ProgramingLanguage = 1,
         Technologies = 2,
     }

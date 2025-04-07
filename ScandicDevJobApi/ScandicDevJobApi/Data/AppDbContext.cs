@@ -14,5 +14,15 @@ namespace ScandicDevJobApi.Data
         public DbSet<Tag> Tags { get; set; }
 
         // Add more DbSets for other models
+
+
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+        //    // Configure many-to-many relationship between JobListing and Tag through JobTag
+        //    base.OnModelCreating(modelBuilder);
+
+        //    modelBuilder.Entity<JobListing>()
+        //      .HasMany(j => j.Tags);
+        //}
     }
 }

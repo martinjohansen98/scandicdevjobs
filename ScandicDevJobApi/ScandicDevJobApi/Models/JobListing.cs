@@ -7,9 +7,9 @@ namespace ScandicDevJobApi.Models
     {
         // General
         public int Id { get; set; }
-        public string Title { get; set; }
+        public string? Title { get; set; }
         public string? Description { get; set; }
-        public User Owner { get; set; }
+        public User? Owner { get; set; }
         public List<Tag>? Tags { get; set; }
         public string? Category { get; set; }
         public EmploymentType EmploymentType { get; set; }
@@ -18,7 +18,7 @@ namespace ScandicDevJobApi.Models
         public int NumberOfApplicants { get; set; } = 0;
 
         // Company
-        public Company Company { get; set; }
+        public Company? Company { get; set; }
         public string? ContactEmail { get; set; }
         public string? ApplicationUrl { get; set; }
 

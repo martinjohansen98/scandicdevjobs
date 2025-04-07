@@ -5,8 +5,8 @@ namespace ScandicDevJobApi.Models
     public class Company
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Email { get; set; } // Signup / login email
+        public string? Name { get; set; }
+        public string? Email { get; set; } // Signup / login email
         public string? Description { get; set; }
         public bool IsVerified { get; set; }
         public int? CompanyLogoUrl { get; set; } // TODO validate and sanitaize url
