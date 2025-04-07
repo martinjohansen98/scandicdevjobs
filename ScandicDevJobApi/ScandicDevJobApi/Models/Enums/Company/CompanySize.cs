@@ -2,7 +2,7 @@
 {
     public enum CompanySize
     {
-        oneToTen = 0,
+        OneToTen = 0,
         TenToFifty = 1,
         FiftyToHundred = 2,
         HundredToFiveHundred = 3,

@@ -35,7 +35,7 @@ namespace ScandicDevJobApi.Models
         public double? Longitude { get; set; }
 
         //Dates
-        public DateTimeOffset? CreatedDate { get; set; } = DateTimeOffset.Now;
+        public DateTimeOffset? CreatedDate { get; set; } = DateTimeOffset.Now.ToUniversalTime();
         public DateTimeOffset? UpdatedDate { get; set; }
         public DateTimeOffset? JobListingExpiryDate { get; set; }
         public DateTimeOffset? ApplicationDeadline { get; set; }

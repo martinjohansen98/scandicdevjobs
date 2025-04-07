@@ -3,6 +3,10 @@ using ScandicDevJobApi.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Determine the environment
+var env = builder.Environment; // This gives access to Development, Staging, Production
+
+
 // Add services to the container.
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DBConnection"))); // Use UseSqlServer for SQL Server
@@ -15,7 +19,7 @@ builder.Services.AddCors(options => // Add CORS policy
         {
             policy.WithOrigins("http://localhost:5173") // Allow frontend origin
                 .AllowAnyMethod() // Allow GET, POST, PUT, DELETE, etc.
-                .AllowAnyHeader(); // Allow all headers
+                .AllowAnyHeader(); // Allow all headers 
         });
 });
 
@@ -26,6 +30,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+//if (env.IsDevelopment())
+//{
+
+//}
 
 // Enable CORS before other middleware
 app.UseCors("AllowFrontend");
