@@ -19,8 +19,8 @@
     // Business?
     let topFilters = [
       { id: 0,        label: 'Java',      icon: '☕' },
-      { id: 0,        label: 'C/C++',     icon: '💻' },
       { id: 1,        label: 'C#/.NET',   icon: '🔷' },
+      { id: 0,        label: 'C/C++',     icon: '💻' },
       { id: 0,        label: 'PHP',       icon: '🐘' },
       { id: 0,        label: 'Ruby',      icon: '💎' },
       { id: 5,        label: 'Python',    icon: '🐍' },
@@ -401,7 +401,7 @@
               <!-- Company Logo -->
               <div class="mr-4">
                 <!-- TODO DEFAULT LOGO -->
-                <img src={job.company?.companyLogoUrl ?? ""} alt="{job.title} Logo" class="w-16 h-16 object-contain" /> 
+                <img src="{job.company?.companyLogoUrl}" alt="{job.title}" class="w-16 h-16 object-contain" /> 
               </div>
               <!-- Job Information -->
               <div class="flex-grow">

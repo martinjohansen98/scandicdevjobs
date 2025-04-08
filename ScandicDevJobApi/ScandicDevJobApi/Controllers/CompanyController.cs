@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,52 +12,48 @@ namespace ScandicDevJobApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class JoblistingsController : ControllerBase
+    public class CompanyController : ControllerBase
     {
         private readonly AppDbContext _context;
-        private readonly IMapper _mapper;
 
-        public JoblistingsController(AppDbContext context)/*  IMapper mapper*/
+        public CompanyController(AppDbContext context)
         {
             _context = context;
-            //_mapper = mapper;
         }
 
-        // GET: api/JobListings
+        // GET: api/Company
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<JobListing>>> GetJoblistings()
+        public async Task<ActionResult<IEnumerable<Company>>> GetCompanies()
         {
-            return await _context.Joblistings
-                .Include(j => j.Company)
-                .Include(j => j.Tags)
+            return await _context.Companies
                 .ToListAsync();
         }
 
-        // GET: api/JobListings/5
+        // GET: api/Company/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<JobListing>> GetJobListing(int id)
+        public async Task<ActionResult<Company>> GetCompany(int id)
         {
-            var jobListing = await _context.Joblistings.FindAsync(id);
+            var company = await _context.Companies.FindAsync(id);
 
-            if (jobListing == null)
+            if (company == null)
             {
                 return NotFound();
             }
 
-            return jobListing;
+            return company;
         }
 
-        // PUT: api/JobListings/5
+        // PUT: api/Company/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutJobListing(int id, JobListing jobListing)
+        public async Task<IActionResult> PutCompany(int id, Company company)
         {
-            if (id != jobListing.Id)
+            if (id != company.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(jobListing).State = EntityState.Modified;
+            _context.Entry(company).State = EntityState.Modified;
 
             try
             {
@@ -66,7 +61,7 @@ namespace ScandicDevJobApi.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!JobListingExists(id))
+                if (!CompanyExists(id))
                 {
                     return NotFound();
                 }
@@ -79,36 +74,36 @@ namespace ScandicDevJobApi.Controllers
             return NoContent();
         }
 
-        // POST: api/JobListings
+        // POST: api/Company
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<JobListing>> PostJobListing(JobListing jobListing)
+        public async Task<ActionResult<Company>> PostCompany(Company company)
         {
-            _context.Joblistings.Add(jobListing);
+            _context.Companies.Add(company);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetJobListing", new { id = jobListing.Id }, jobListing);
+            return CreatedAtAction("GetCompany", new { id = company.Id }, company);
         }
 
-        // DELETE: api/JobListings/5
+        // DELETE: api/Company/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteJobListing(int id)
+        public async Task<IActionResult> DeleteCompany(int id)
         {
-            var jobListing = await _context.Joblistings.FindAsync(id);
-            if (jobListing == null)
+            var company = await _context.Companies.FindAsync(id);
+            if (company == null)
             {
                 return NotFound();
             }
 
-            _context.Joblistings.Remove(jobListing);
+            _context.Companies.Remove(company);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool JobListingExists(int id)
+        private bool CompanyExists(int id)
         {
-            return _context.Joblistings.Any(e => e.Id == id);
+            return _context.Companies.Any(e => e.Id == id);
         }
     }
 }

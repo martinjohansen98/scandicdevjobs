@@ -1,4 +1,5 @@
 ﻿using ScandicDevJobApi.Models.Enums.Company;
+using System.Text.Json.Serialization;
 
 namespace ScandicDevJobApi.Models
 {
@@ -9,7 +10,7 @@ namespace ScandicDevJobApi.Models
         public string? Email { get; set; } // Signup / login email
         public string? Description { get; set; }
         public bool IsVerified { get; set; }
-        public int? CompanyLogoUrl { get; set; } // TODO validate and sanitaize url
+        public string? CompanyLogoUrl { get; set; } // TODO validate and sanitaize url
         public CompanySize? CompanySize { get; set; }
         public string? Website { get; set; } // Example: "company.com"
         public string? ContactEmail { get; set; } // Example: "info@company.com"
@@ -22,6 +23,7 @@ namespace ScandicDevJobApi.Models
         public string? Facebook { get; set; } // Example: "facebook.com/example"
 
         // Jobs Associated with Company
+        [JsonIgnore]
         public List<JobListing>? JobListings { get; set; } // Jobs posted by this company
 
     }

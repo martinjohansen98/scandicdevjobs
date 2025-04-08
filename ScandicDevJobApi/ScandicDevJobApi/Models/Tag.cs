@@ -1,4 +1,5 @@
 ﻿using ScandicDevJobApi.Models.Enums.Tag;
+using System.Text.Json.Serialization;
 
 namespace ScandicDevJobApi.Models
 {
@@ -8,8 +9,11 @@ namespace ScandicDevJobApi.Models
         public string? Name { get; set; }
 
         public string? UnicodeIcon { get; set; }
+
+        public int? TagLevel { get; set; }
         public TagCategory? TagCategory { get; set; }
 
-        public List<JobListing>? JobListings { get; set; }
+        [JsonIgnore]
+        public List<JobListing>? Joblistings { get; set; }
     }
 }

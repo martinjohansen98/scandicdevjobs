@@ -5,5 +5,6 @@
         Undefined = 0,
         ProgramingLanguage = 1,
         Technologies = 2,
+        FrontEndFramework = 3,
     }
 }

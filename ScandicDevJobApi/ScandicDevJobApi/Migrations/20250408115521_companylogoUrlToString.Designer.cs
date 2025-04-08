@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ScandicDevJobApi.Data;
@@ -11,9 +12,11 @@ using ScandicDevJobApi.Data;
 namespace ScandicDevJobApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250408115521_companylogoUrlToString")]
+    partial class companylogoUrlToString
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,13 +27,13 @@ namespace ScandicDevJobApi.Migrations
 
             modelBuilder.Entity("JobListingTag", b =>
                 {
-                    b.Property<int>("JoblistingsId")
+                    b.Property<int>("JobListingsId")
                         .HasColumnType("integer");
 
                     b.Property<int>("TagsId")
                         .HasColumnType("integer");
 
-                    b.HasKey("JoblistingsId", "TagsId");
+                    b.HasKey("JobListingsId", "TagsId");
 
                     b.HasIndex("TagsId");
 
@@ -220,7 +223,7 @@ namespace ScandicDevJobApi.Migrations
                 {
                     b.HasOne("ScandicDevJobApi.Models.JobListing", null)
                         .WithMany()
-                        .HasForeignKey("JoblistingsId")
+                        .HasForeignKey("JobListingsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
