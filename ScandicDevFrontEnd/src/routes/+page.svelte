@@ -12,7 +12,7 @@
         <JobSection />
       </div>
       <!-- Right: Map (40% width) -->
-      <div class="w-2/5 h-full">
+      <div class="w-2/5 h-full relative z-0">
         <Map />
       </div>
     </div>

@@ -18,11 +18,11 @@ namespace DatabaseSeeder
         {
             var users = new List<User>
             {
-                new User { Name = "Alice", Email = "alice@example.com" },
-                new User { Name = "Bob", Email = "bob@example.com" },
-                new User { Name = "Charlie", Email = "charlie@example.com" },
-                new User { Name = "David", Email = "david@example.com" },
-                new User { Name = "Eve", Email = "eve@example.com" },
+                new User { FirstName = "Alice", LastName = "Testtt", Email = "alice@example.com"},
+                new User { FirstName = "Bob", LastName = "Testtt", Email = "bob@example.com" },
+                new User { FirstName = "Charlie", LastName = "Testtt", Email = "charlie@example.com" },
+                new User { FirstName = "David", LastName = "Testtt", Email = "david@example.com" },
+                new User { FirstName = "Eve", LastName = "Testtt", Email = "eve@example.com" },
             };
             if (!context.Users.Any())
             {

@@ -1,9 +1,10 @@
 <!-- src/lib/Navbar.svelte -->
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { registerUser, loginUser } from './api';
   
   let activeLang = 'se';
-  let darkMode = true; 
+  let darkMode = true;
   
   function setLanguage(lang: string) {
     activeLang = lang;
@@ -27,6 +28,71 @@
       document.documentElement.setAttribute('data-theme', 'winter');
     }
   });
+
+  import { fade, scale } from 'svelte/transition';
+  import { cubicOut } from 'svelte/easing';
+
+  let showModal = false;
+  let selectedTab = 'login';
+
+  let firstName = '';
+  let lastName = '';
+  let email = '';
+  let confirmEmail = '';
+  let password = '';
+  let confirmPassword = '';
+
+  function customModalTransition(node: Element, options = {}) {
+  const fadeTransition = fade(node, { duration: 300 });
+  const scaleTransition = scale(node, {
+    duration: 300,
+    easing: cubicOut,
+    start: 0.9
+  });
+
+  return {
+    delay: 0,
+    duration: 300,
+    css: (t: number, u: number) => {
+      const fadeCss = fadeTransition.css ? fadeTransition.css(t, u) : '';
+      const scaleCss = scaleTransition.css ? scaleTransition.css(t, u) : '';
+      return `${fadeCss}; ${scaleCss}`;
+    }
+  };
+}
+
+async function handleSubmit() {
+  try {
+    if (selectedTab === 'register') {
+      if (email !== confirmEmail) {
+        alert("Emails do not match!");
+        return;
+      }
+      if (password !== confirmPassword) {
+        alert("Passwords do not match!");
+        return;
+      }
+
+      const response = await registerUser({
+        firstName,
+        lastName,
+        email,
+        password
+      });
+
+      console.log("Registered:", response.data);
+      showModal = false;
+
+    } else {
+      const response = await loginUser({ email, password });
+      console.log("Logged in:", response.data);
+      showModal = false;
+    }
+  } 
+  catch (error: any) {
+  alert(error.response?.data || "Something went wrong");
+  }
+}
 </script>
 
 <nav class="bg-base-200 p-4 shadow">
@@ -82,6 +148,86 @@
           </button>
         </div>
       </li>
+      <!-- Register Button -->
+      <li>
+        <button
+          on:click={() => showModal = true}
+          class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+          Login/Register
+        </button>
+      </li>
     </ul>
   </div>
 </nav>
+
+{#if showModal}
+  <!-- Backdrop -->
+  <div
+    class="fixed inset-0 bg-[rgba(0,0,0,0.05)] backdrop-blur-sm z-40 flex items-center justify-center"
+    in:fade={{ duration: 200 }}
+    out:fade={{ duration: 200 }}
+  >
+
+    <!-- Animated Modal Wrapper -->
+    <div class="w-full max-w-md" in:customModalTransition out:customModalTransition>
+      <!-- Modal Content Box -->
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg relative z-50">
+
+        <!-- Close Button -->
+        <button
+          on:click={() => showModal = false}
+          class="absolute top-2 right-2 text-gray-500 hover:text-gray-800 dark:hover:text-white text-xl font-bold">
+          ×
+        </button>
+
+        <!-- Tab Navigation -->
+        <div class="flex mb-4 space-x-4">
+          <button
+            on:click={() => selectedTab = 'login'}
+            class="px-4 py-2 rounded-t border-b-2 transition-all duration-150 font-semibold"
+            class:bg-gray-100={selectedTab === 'login'}
+            class:border-blue-500={selectedTab === 'login'}>
+            Login
+          </button>
+          <button
+            on:click={() => selectedTab = 'register'}
+            class="px-4 py-2 rounded-t border-b-2 transition-all duration-150 font-semibold"
+            class:bg-gray-100={selectedTab === 'register'}
+            class:border-blue-500={selectedTab === 'register'}>
+            Register
+          </button>
+        </div>
+
+        <!-- Form Content -->
+        <form on:submit|preventDefault={handleSubmit} class="space-y-4">
+          {#if selectedTab === 'register'}
+            <!-- Register Form -->
+            <div class="flex space-x-4">
+              <input type="text" placeholder="First name" bind:value={firstName} required class="w-1/2 p-2 border rounded" />
+              <input type="text" placeholder="Last name" bind:value={lastName} required class="w-1/2 p-2 border rounded" />
+            </div>
+            <input type="email" placeholder="Email address" bind:value={email} required class="w-full p-2 border rounded" />
+            <input type="email" placeholder="Confirm email address" bind:value={confirmEmail} required class="w-full p-2 border rounded" />
+            <input type="password" placeholder="Password" bind:value={password} required class="w-full p-2 border rounded" />
+            <input type="password" placeholder="Confirm password" bind:value={confirmPassword} required class="w-full p-2 border rounded" />
+            <button type="submit" class="w-full py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Register</button>
+          {:else}
+            <!-- Login Form -->
+            <input type="email" placeholder="Email address" bind:value={email} required class="w-full p-2 border rounded" />
+            <input type="password" placeholder="Password" bind:value={password} required class="w-full p-2 border rounded" />
+            <button type="submit" class="w-full py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">Login</button>
+          {/if}
+        </form>
+
+      </div>
+    </div>
+  </div>
+{/if}
+
+
+
+
+
+
+
+
