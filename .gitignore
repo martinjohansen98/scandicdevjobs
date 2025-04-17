@@ -133,3 +133,4 @@ $RECYCLE.BIN/
 #Added by Oliv
 *.vsidx
 ScandicDevJobApi/.vs/*
+Directory.Build.props
