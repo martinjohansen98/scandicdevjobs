@@ -20,11 +20,12 @@ namespace ScandicDevJobApi.Controllers
     public class UsersController : ControllerBase
     {
         private readonly AppDbContext _context;
-        private readonly string _jwtSecret = "YOUR_SECRET_KEY_HERE";
+        private readonly string _jwtSecret;
 
-        public UsersController(AppDbContext context)
+        public UsersController(AppDbContext context, IConfiguration configuration)
         {
-            _context = context;
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _jwtSecret = configuration["Jwt:Secret"] ?? throw new ArgumentNullException("Jwt:Secret configuration is missing");
         }
 
         // GET: api/Users
@@ -116,70 +117,137 @@ namespace ScandicDevJobApi.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<User>> Register(RegisterDto dto)
         {
-            // Check if user with the same email already exists
-            var userExists = await _context.Users.AnyAsync(u => u.Email == dto.Email);
-            if (userExists)
+            var exists = await _context.Users.AnyAsync(u => u.Email == dto.Email);
+            if (exists)
                 return BadRequest("User already exists");
 
-            // Create a new user and hash the password using BCrypt
             var user = new User
             {
                 FirstName = dto.FirstName,
                 LastName = dto.LastName,
                 Email = dto.Email,
-                // If your User model property is called Password, use it.
-                // Otherwise, change this to match your property name (e.g. PasswordHash)
                 Password = BCrypt.Net.BCrypt.HashPassword(dto.Password)
             };
-
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
+            var keyBytes = Encoding.UTF8.GetBytes(_jwtSecret);
+            var signingKey = new SymmetricSecurityKey(keyBytes);
+            var creds = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
+
+            var descriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[] {
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Email, user.Email)
+                }),
+                    Expires = DateTime.UtcNow.AddDays(7),
+                    SigningCredentials = creds
+            };
+
+            var handler = new JsonWebTokenHandler();
+            var jwt = handler.CreateToken(descriptor);
+
+            Response.Cookies.Append("jwt", jwt, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Path = "/",
+                Expires = descriptor.Expires
+            });
+
             return Ok(user);
         }
+
 
         // Login Endpoint
         // POST: api/Users/login
         [HttpPost("login")]
         public async Task<ActionResult<User>> Login(LoginDto dto)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
-            if (user == null)
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.Email == dto.Email);
+            if (user == null ||
+                !BCrypt.Net.BCrypt.Verify(dto.Password, user.Password))
                 return Unauthorized("Invalid credentials");
 
-            // Verify the password using BCrypt (ensure your User model has a Password property or update accordingly)
-            if (!BCrypt.Net.BCrypt.Verify(dto.Password, user.Password))
-                return Unauthorized("Invalid credentials");
-
-            // Generate JWT token using Microsoft.IdentityModel.JsonWebTokens
-            var key = Encoding.ASCII.GetBytes(_jwtSecret);
-            var signingKey = new SymmetricSecurityKey(key);
-            var signingCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
+            // 👉 New: use UTF8 bytes of your plain‑text secret
+            var keyBytes = Encoding.UTF8.GetBytes(_jwtSecret);
+            var signingKey = new SymmetricSecurityKey(keyBytes);
+            var signingCredentials =
+                new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new Claim[]
+                Subject = new ClaimsIdentity(new[]
                 {
-                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                    new Claim(ClaimTypes.Email, user.Email)
-                }),
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Email, user.Email)
+        }),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = signingCredentials
             };
 
-            var tokenHandler = new JsonWebTokenHandler();
-            var tokenString = tokenHandler.CreateToken(tokenDescriptor);
+            var handler = new JsonWebTokenHandler();
+            var jwt = handler.CreateToken(tokenDescriptor);
 
-            // Store the token in an HttpOnly cookie
-            Response.Cookies.Append("jwt", tokenString, new CookieOptions
+            Response.Cookies.Append("jwt", jwt, new CookieOptions
             {
                 HttpOnly = true,
-                Secure = true, // Ensure HTTPS in production
-                SameSite = SameSiteMode.Strict,
+                Secure = true,             // still required for SameSite=None
+                SameSite = SameSiteMode.None,
+                Path = "/",              // make it available to all your endpoints
                 Expires = tokenDescriptor.Expires
             });
 
+
             return Ok(user);
+        }
+
+        [HttpGet("me")]
+        public async Task<ActionResult<User>> Me()
+        {
+            // grab the JWT from the cookie
+            if (!Request.Cookies.TryGetValue("jwt", out var token) || string.IsNullOrEmpty(token))
+                return Unauthorized();
+
+            // decode it
+            var handler = new JsonWebTokenHandler();
+            JsonWebToken jwt;
+            try
+            {
+                jwt = handler.ReadJsonWebToken(token);
+            }
+            catch
+            {
+                return Unauthorized();
+            }
+
+            // pull out the user ID claim
+            var idClaim = jwt.GetPayloadValue<string>(ClaimTypes.NameIdentifier);
+            if (!int.TryParse(idClaim, out var userId))
+                return Unauthorized();
+
+            // load the user
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null)
+                return NotFound();
+
+            return Ok(user);
+        }
+
+        [HttpPost("logout")]
+        public IActionResult Logout()
+        {
+            Response.Cookies.Delete("jwt", new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Path = "/"          // ← this must match how you set it
+            });
+            return NoContent();
         }
     }
 }

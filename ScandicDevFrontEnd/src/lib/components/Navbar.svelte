@@ -1,10 +1,24 @@
 <!-- src/lib/Navbar.svelte -->
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { user, type User } from '../types/user';
+  import type { RegisterData, LoginData } from './api';
   import { registerUser, loginUser } from './api';
+  import axios from 'axios';
   
   let activeLang = 'se';
   let darkMode = true;
+  let showModal = false;
+  let selectedTab = 'login';
+  let menuOpen = false;
+  let initialized  = false;
+
+  let firstName = '';
+  let lastName = '';
+  let email = '';
+  let confirmEmail = '';
+  let password = '';
+  let confirmPassword = '';
   
   function setLanguage(lang: string) {
     activeLang = lang;
@@ -19,28 +33,9 @@
     }
     console.log('Theme is now:', document.documentElement.getAttribute('data-theme'));
   }
-  
-  onMount(() => {
-    // Apply the initial theme based on the darkMode variable.
-    if (darkMode) {
-      document.documentElement.setAttribute('data-theme', 'dark');
-    } else {
-      document.documentElement.setAttribute('data-theme', 'winter');
-    }
-  });
 
   import { fade, scale } from 'svelte/transition';
   import { cubicOut } from 'svelte/easing';
-
-  let showModal = false;
-  let selectedTab = 'login';
-
-  let firstName = '';
-  let lastName = '';
-  let email = '';
-  let confirmEmail = '';
-  let password = '';
-  let confirmPassword = '';
 
   function customModalTransition(node: Element, options = {}) {
   const fadeTransition = fade(node, { duration: 300 });
@@ -62,37 +57,62 @@
 }
 
 async function handleSubmit() {
-  try {
-    if (selectedTab === 'register') {
-      if (email !== confirmEmail) {
-        alert("Emails do not match!");
-        return;
+    try {
+      let res;
+      if (selectedTab === 'register') {
+        if (email !== confirmEmail) {
+          alert("Emails do not match!");
+          return;
+        }
+        if (password !== confirmPassword) {
+          alert("Passwords do not match!");
+          return;
+        }
+        res = await registerUser({ firstName, lastName, email, password });
+      } else {
+        res = await loginUser({ email, password });
       }
-      if (password !== confirmPassword) {
-        alert("Passwords do not match!");
-        return;
-      }
-
-      const response = await registerUser({
-        firstName,
-        lastName,
-        email,
-        password
-      });
-
-      console.log("Registered:", response.data);
+      user.set(res.data as User);
       showModal = false;
-
-    } else {
-      const response = await loginUser({ email, password });
-      console.log("Logged in:", response.data);
-      showModal = false;
+    } catch (err: any) {
+      alert(err.response?.data || "Something went wrong");
     }
-  } 
-  catch (error: any) {
-  alert(error.response?.data || "Something went wrong");
   }
-}
+
+  onMount(async () => {
+    document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'winter');
+
+    try {
+      const r = await fetch('https://localhost:7077/api/Users/me', {
+        credentials: 'include'
+      });
+      if (r.ok) {
+        user.set(await r.json() as User);
+      } else {
+        user.set(null);   // clear if not authorized
+      }
+  } catch {
+      user.set(null);     // also clear on network error
+  } finally {
+      initialized = true;
+  }
+
+    document.addEventListener('click', e => {
+      if (menuOpen && !(e.target as Element).closest('.avatar-menu')) {
+        menuOpen = false;
+      }
+    });
+  });
+
+  function logout() {
+    fetch('https://localhost:7077/api/Users/logout', {
+      method: 'POST',
+      credentials: 'include'
+    }).finally(() => {
+      user.set(null);
+      menuOpen = false;
+    });
+  }
 </script>
 
 <nav class="bg-base-200 p-4 shadow">
@@ -149,14 +169,48 @@ async function handleSubmit() {
         </div>
       </li>
       <!-- Register Button -->
+      {#if $user}
+      <li class="relative avatar-menu">
+        <!-- Avatar button toggles menuOpen -->
+        <button
+          on:click={() => menuOpen = !menuOpen}
+          class="w-8 h-8 rounded-full overflow-hidden focus:outline-none border-2 border-transparent hover:border-blue-500 transition">
+          <img
+            src={`https://ui-avatars.com/api/?name=${$user.firstName}+${$user.lastName}&background=0D8ABC&color=fff`}
+            alt="avatar"
+          />
+        </button>
+  
+        {#if menuOpen}
+          <!-- Dropdown -->
+          <ul class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded shadow-lg py-1 z-50">
+            <li>
+              <a
+                href="/settings"
+                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+                Settings
+              </a>
+            </li>
+            <li>
+              <button
+                on:click={logout}
+                class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+                Logout
+              </button>
+            </li>
+          </ul>
+        {/if}
+      </li>
+    {:else}
       <li>
         <button
-          on:click={() => showModal = true}
+          on:click={() => { showModal = true; selectedTab = 'login'; }}
           class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
-          Login/Register
+          Login / Register
         </button>
       </li>
-    </ul>
+    {/if}
+  </ul>
   </div>
 </nav>
 
@@ -223,7 +277,6 @@ async function handleSubmit() {
     </div>
   </div>
 {/if}
-
 
 
 
