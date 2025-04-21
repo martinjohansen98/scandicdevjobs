@@ -401,7 +401,7 @@
               <!-- Company Logo -->
               <div class="mr-4">
                 <!-- TODO DEFAULT LOGO -->
-                <img src="{job.company?.companyLogoUrl}" alt="{job.title}" class="w-16 h-16 object-contain" /> 
+                <img src="http://127.0.0.1:10000/devstoreaccount1/uploads/Untitled.png" alt="{job.title}" class="w-16 h-16 object-contain" /> 
               </div>
               <!-- Job Information -->
               <div class="flex-grow">

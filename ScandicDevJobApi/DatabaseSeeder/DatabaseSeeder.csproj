@@ -10,6 +10,10 @@
     <ProjectReference Include="..\ScandicDevJobApi\ScandicDevJobApi.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="images\" />
+  </ItemGroup>
+
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>

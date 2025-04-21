@@ -15,7 +15,7 @@ public record JoblistingDto
     public int NumberOfApplicants { get; set; } = 0;
 
     // Company
-    public CompanyDto? Company { get; set; }
+    public CompanyRequestDto? Company { get; set; }
     public string? ContactEmail { get; set; }
     public string? ApplicationUrl { get; set; }
 

@@ -57,6 +57,7 @@ namespace ScandicDevJobApi.Controllers
 
             try
             {
+                //company.CompanyLogoGuid = ; // TODO fix so that upload is possible on creating
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)

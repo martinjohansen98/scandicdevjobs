@@ -1,13 +1,17 @@
 ﻿using ScandicDevJobApi.Models.Enums.Company;
+using System.Buffers.Text;
 
-public record CompanyDto
+public record CompanyResponseDto
 {
     public int Id { get; set; }
     public string? Name { get; set; }
     public string? Email { get; set; } // Signup / login email
     public string? Description { get; set; }
     public bool IsVerified { get; set; }
-    public string? CompanyLogoUrl { get; set; } // TODO validate and sanitaize url
+    public string? BlobStorageLogoName { get; set; }
+    //public string? CompanyLogoUrl => BlobStorageLogoName != null
+    //    ? $"{BaseUrl}{BlobStorageLogoName}"
+    //    : null;
     public CompanySize? CompanySize { get; set; }
     public string? Website { get; set; } // Example: "company.com"
     public string? ContactEmail { get; set; } // Example: "info@company.com"
@@ -20,7 +24,8 @@ public record CompanyDto
     public string? Facebook { get; set; } // Example: "facebook.com/example"
 
     // Jobs Associated with Company
-    //public List<JobListingDto>? JobListings { get; set; } // Jobs posted by this company
+    //[JsonIgnore]
+    //public List<JoblistingDto>? JobListings { get; set; } // Jobs posted by this company
 
 }
 

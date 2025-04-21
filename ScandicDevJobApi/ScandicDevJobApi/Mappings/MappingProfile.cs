@@ -12,9 +12,12 @@ namespace ScandicDevJobApi.Mappings
             CreateMap<JobListing, JoblistingDto>();
             CreateMap<Tag, TagDto>();
             CreateMap<User, UserDto>();
-            CreateMap<Company, CompanyDto>();
+            CreateMap<Company, CompanyRequestDto>();
 
-
+            //CreateMap<Company, CompanyResponseDto>()
+            //    .ForMember(dest => dest.LogoUrl,
+            //        opt => opt.MapFrom((src, dest, _, context) =>
+            //            context.Options.Items["BaseUrl"] + src.BlobStorageLogoName));
         }
     }
 }

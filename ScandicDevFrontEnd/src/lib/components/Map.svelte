@@ -40,7 +40,7 @@
       // Create and add a new marker for each job.
       jobs.forEach(job => {
         const marker = L.marker([job.latitude, job.longitude], {
-          icon: map.getZoom() >= 12 ? createLogoIcon(job.company?.companyLogoUrl ?? "") : createClusterIcon()
+          icon: map.getZoom() >= 12 ? createLogoIcon(job.company?.companyLogoUrl ?? "https://dummyimage.com/200x200/000/fff.png&text=Majs") : createClusterIcon()
         });
         marker.bindPopup(`
           <div class="p-2">

@@ -16,7 +16,7 @@ namespace ScandicDevJobApi.Controllers
     public class JoblistingsController : ControllerBase
     {
         private readonly AppDbContext _context;
-        private readonly IMapper _mapper;
+        //private readonly IMapper _mapper;
 
         public JoblistingsController(AppDbContext context)/*  IMapper mapper*/
         {

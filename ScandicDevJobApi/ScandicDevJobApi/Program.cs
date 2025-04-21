@@ -1,13 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ScandicDevJobApi.Data;
+using ScandicDevJobApi.filters;
+using ScandicDevJobApi.Models.Azure;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Determine the environment
 var env = builder.Environment; // This gives access to Development, Staging, Production
 
-// 1️⃣ Add CORS policy that allows credentials
-builder.Services.AddCors(options =>
+// Add services to the container.
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DBConnection"))); // Use UseSqlServer for SQL Server
+
+builder.Services.AddCors(options => // Add CORS policy
+
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
@@ -26,12 +32,38 @@ builder.Services.AddControllers();
 
 // Swagger for development
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen( options =>
+{
+    options.OperationFilter<FileUploadOperationFilter>(); // register file upload filter
+});
+
+// Azure Blob Storage
+builder.Services.Configure<AzureBlobStorageSettings>(
+    builder.Configuration.GetSection("Azure:BlobStorage")
+);
+builder.Services.AddSingleton<AzureBlobStorageService>();
+
+
+
+
 
 var app = builder.Build();
 
-// 3️⃣ Enable CORS **before** other middleware (authorization, endpoints)
-app.UseCors("AllowFrontend");            // <-- applies the policy globally :contentReference[oaicite:1]{index=1}
+// Enable CORS before other middleware
+app.UseCors("AllowFrontend");
+
+app.UseCors("AllowFrontend");
+
+app.UseCors("AllowFrontend");
+
+app.UseCors("AllowFrontend");
+
+app.UseCors("AllowFrontend");
+
+app.UseCors("AllowFrontend");
+
+app.UseCors("AllowFrontend");
+
 
 if (app.Environment.IsDevelopment())
 {
