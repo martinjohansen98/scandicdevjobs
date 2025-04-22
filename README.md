@@ -10,8 +10,6 @@ An interactive, real-time platform for Scandinavian software developers to disco
 - [Data Model](#data-model)
 - [API Endpoints](#api-endpoints)
 - [Setup & Installation](#setup--installation)
-- [DevOps & Deployment](#devops--deployment)
-- [Future Work](#future-work)
 
 ## Description
 
