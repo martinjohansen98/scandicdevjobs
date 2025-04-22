@@ -1,6 +1,6 @@
 ![Image alt](https://github.com/Olivolja/ScandicDevJobs/blob/6d077923c9a9fbbe97651895f93dee8ef1223824/ScanDevJobs-readme.png)
 
-An interactive, real-time platform for Scandinavian software developers to discover, apply for, and engage with job opportunities. Beyond static listings, ScandevJobs emphasizes user-generated data, live notifications, and community-driven insights to create a dynamic and engaging job-hunting experience. Our primary objective is to create a software‑developer job market that’s both highly transparent and easily accessible.
+An interactive, real-time platform for Scandinavian software developers to discover, apply for, and engage with job opportunities. Beyond static listings, ScandevJobs emphasizes user-generated data, live notifications, and community-driven insights to create a dynamic and engaging job-hunting experience. Our primary objective is to create a software‑developer job market in scandinavia that’s both highly transparent and easily accessible.
 
 ## Table of Contents
 - [Description](#description)
