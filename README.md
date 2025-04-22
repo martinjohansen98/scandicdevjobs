@@ -17,7 +17,7 @@ ScandevJobs allows developers to:
 - Create and customize profiles (skills, CV, preferences).
 - Browse and filter job listings in real time.
 - Track application status with live updates.
-- Chat with recruiters and peers.
+- Chat with recruiters.
 - View job locations on an interactive map.
 
 ## Technologies & Frameworks
