@@ -1,17 +1,17 @@
 <!-- src/lib/Navbar.svelte -->
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { user, type User } from '../types/user';
-  import type { RegisterData, LoginData } from './api';
-  import { registerUser, loginUser } from './api';
-  import axios from 'axios';
-  
+  import { user, type User } from '$lib/stores/user';
+  import { fade, scale } from 'svelte/transition';
+  import { cubicOut } from 'svelte/easing';
+  import { darkMode } from '$lib/stores/backgroundTheme';
+
   let activeLang = 'se';
-  let darkMode = true;
   let showModal = false;
   let selectedTab = 'login';
   let menuOpen = false;
   let initialized  = false;
+  let loading = false;
 
   let firstName = '';
   let lastName = '';
@@ -25,17 +25,8 @@
   }
   
   function toggleDarkMode() {
-    darkMode = !darkMode;
-    if (darkMode) {
-      document.documentElement.setAttribute('data-theme', 'dark');
-    } else {
-      document.documentElement.setAttribute('data-theme', 'winter');
-    }
-    console.log('Theme is now:', document.documentElement.getAttribute('data-theme'));
+    darkMode.update(x => !x);
   }
-
-  import { fade, scale } from 'svelte/transition';
-  import { cubicOut } from 'svelte/easing';
 
   function customModalTransition(node: Element, options = {}) {
   const fadeTransition = fade(node, { duration: 300 });
@@ -57,33 +48,51 @@
 }
 
 async function handleSubmit() {
-    try {
-      let res;
-      if (selectedTab === 'register') {
-        if (email !== confirmEmail) {
-          alert("Emails do not match!");
-          return;
-        }
-        if (password !== confirmPassword) {
-          alert("Passwords do not match!");
-          return;
-        }
-        res = await registerUser({ firstName, lastName, email, password });
-      } else {
-        res = await loginUser({ email, password });
+  loading = true;
+  try {
+    let res;
+    if (selectedTab === 'register') {
+      if (email !== confirmEmail) {
+        alert("Emails do not match!");
+        return;
       }
-      user.set(res.data as User);
-      showModal = false;
-    } catch (err: any) {
-      alert(err.response?.data || "Something went wrong");
+      if (password !== confirmPassword) {
+        alert("Passwords do not match!");
+        return;
+      }
+      res = await fetch('/api/Users/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ firstName, lastName, email, password })
+      });
+    } else {
+      res = await fetch('/api/Users/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ email, password })
+      });
     }
+
+    if (!res.ok) throw new Error(await res.text());
+    user.set(await res.json());
+    showModal = false;
+    selectedTab = 'login';
+
+    // Reset form
+    firstName = lastName = email = confirmEmail = password = confirmPassword = '';
+  } catch (err) {
+    alert((err instanceof Error ? err.message : "Something went wrong"));
+  } finally {
+    loading = false;
   }
+}
 
   onMount(async () => {
-    document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'winter');
 
     try {
-      const r = await fetch('https://localhost:7077/api/Users/me', {
+      const r = await fetch('/api/Users/me', {
         credentials: 'include'
       });
       if (r.ok) {
@@ -105,39 +114,49 @@ async function handleSubmit() {
   });
 
   function logout() {
-    fetch('https://localhost:7077/api/Users/logout', {
-      method: 'POST',
-      credentials: 'include'
-    }).finally(() => {
-      user.set(null);
-      menuOpen = false;
-    });
-  }
+  fetch('/api/Users/logout', {
+    method: 'POST'
+  }).finally(() => {
+    user.set(null);
+    menuOpen = false;
+  });
+}
+
 </script>
 
-<nav class="bg-base-200 p-4 shadow">
+<nav class="red p-4 shadow">
   <div class="flex justify-between items-center w-full px-4">
     <a href="/" class="flex items-center space-x-2 text-xl font-bold">
       <img src="Webicon.png" alt="Logo" class="h-12 w-12" />
       <span>ScanDevJobs</span>
     </a>
     <ul class="flex items-center space-x-4">
-      <!-- Dark Mode Toggle -->
       <li class="flex items-center">
         <button
           on:click={toggleDarkMode}
-          class="relative w-12 h-6 bg-gray-300 dark:bg-gray-600 rounded-full focus:outline-none inline-flex items-center justify-center">
+          class="relative w-12 h-6 bg-gray-300 dark:bg-gray-600 rounded-full focus:outline-none inline-flex items-center justify-center"
+        >
           <span
             class={`absolute top-0.5 left-0.5 w-5 h-5 bg-white dark:bg-gray-800 rounded-full shadow transform transition-transform duration-200 ${
-              darkMode ? 'translate-x-0' : 'translate-x-6'
-            }`}>
-            {#if darkMode}
+              $darkMode ? 'translate-x-6' : 'translate-x-0'
+            }`}
+          >
+            {#if !$darkMode}
+              <!-- moon icon -->
               <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-yellow-500 absolute inset-0 m-auto" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M17.293 13.293A8 8 0 116.707 2.707a7.968 7.968 0 0010.586 10.586z" />
               </svg>
             {:else}
+              <!-- sun icon -->
               <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-yellow-500 absolute inset-0 m-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m8-9h1M3 12H2m15.364-7.364l.707.707m-12.02 12.02l-.707.707M15.364 19.364l.707-.707m-12.02-12.02l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 3v1m0 16v1m8-9h1M3 12H2
+                     m15.364-7.364l.707.707
+                     m-12.02 12.02l-.707.707
+                     M15.364 19.364l.707-.707
+                     m-12.02-12.02l-.707-.707
+                     M12 8a4 4 0 100 8 4 4 0 000-8z"
+                />
               </svg>
             {/if}
           </span>
@@ -264,12 +283,36 @@ async function handleSubmit() {
             <input type="email" placeholder="Confirm email address" bind:value={confirmEmail} required class="w-full p-2 border rounded" />
             <input type="password" placeholder="Password" bind:value={password} required class="w-full p-2 border rounded" />
             <input type="password" placeholder="Confirm password" bind:value={confirmPassword} required class="w-full p-2 border rounded" />
-            <button type="submit" class="w-full py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Register</button>
-          {:else}
+            <button type="submit" class="w-full py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition flex items-center justify-center" disabled={loading}>
+              {#if loading}
+                <svg class="animate-spin h-5 w-5 text-white mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                </svg>
+                Loading...
+              {:else}
+                Register
+              {/if}
+            </button>
+            {:else}
             <!-- Login Form -->
             <input type="email" placeholder="Email address" bind:value={email} required class="w-full p-2 border rounded" />
             <input type="password" placeholder="Password" bind:value={password} required class="w-full p-2 border rounded" />
-            <button type="submit" class="w-full py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">Login</button>
+            <button
+              type="submit"
+              class="w-full py-2 bg-green-600 text-white rounded hover:bg-green-700 transition flex items-center justify-center"
+              disabled={loading}
+            >
+              {#if loading}
+                <svg class="animate-spin h-5 w-5 text-white mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                </svg>
+                Loading...
+              {:else}
+                Login
+              {/if}
+            </button>
           {/if}
         </form>
 

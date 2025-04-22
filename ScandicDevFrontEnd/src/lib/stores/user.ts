@@ -1,4 +1,5 @@
 import { writable } from 'svelte/store';
+import { browser } from '$app/environment';
 
 export interface User {
   id: number;
@@ -7,11 +8,10 @@ export interface User {
   email: string;
 }
 
-// Create a custom writable that syncs to localStorage
 function createUserStore() {
-  // On load, try to read from localStorage
-  let initial: User|null = null;
-  if (typeof localStorage !== 'undefined') {
+  let initial: User | null = null;
+
+  if (browser) {
     const json = localStorage.getItem('user');
     if (json) {
       try {
@@ -27,10 +27,12 @@ function createUserStore() {
   return {
     subscribe,
     set: (u: User | null) => {
-      if (u) {
-        localStorage.setItem('user', JSON.stringify(u));
-      } else {
-        localStorage.removeItem('user');
+      if (browser) {
+        if (u) {
+          localStorage.setItem('user', JSON.stringify(u));
+        } else {
+          localStorage.removeItem('user');
+        }
       }
       set(u);
     }
@@ -38,4 +40,3 @@ function createUserStore() {
 }
 
 export const user = createUserStore();
-

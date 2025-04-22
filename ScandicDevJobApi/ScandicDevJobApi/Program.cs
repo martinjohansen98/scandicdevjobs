@@ -18,10 +18,10 @@ builder.Services.AddCors(options => // Add CORS policy
     options.AddPolicy("AllowFrontend", policy =>
     {
         policy
-            .WithOrigins("http://localhost:5173") // Your Svelte dev URL
-            .AllowAnyMethod()                     // Allow GET, POST, PUT, DELETE, etc.
-            .AllowAnyHeader()                     // Allow all headers
-            .AllowCredentials();                  // <-- MUST for cookies/credentials :contentReference[oaicite:0]{index=0}
+            .WithOrigins("http://localhost:5173")
+            .AllowAnyMethod()                     
+            .AllowAnyHeader()                     
+            .AllowCredentials();                  
     });
 });
 

@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store';
 // import { Client, JobListing   6} from '../../api-client';
-import type { Joblisting } from '$lib/types/Joblisting';
+import type { Joblisting } from '$lib/stores/JobListing';
 
 export const jobList = writable<Joblisting[]>([]);
 export const jobListLoading = writable<boolean>(false);
@@ -17,7 +17,7 @@ export async function fetchJobs() {
             throw new Error(`Error fetching jobs: ${response.statusText}`);
         }
         const data: Joblisting[] = await response.json();
-        jobList.set(data); // ✅ Updates store with fetched jobs
+        jobList.set(data);
     } catch (err) {
         jobListError.set(err instanceof Error ? err.message : "Unknown error");
     } finally {
