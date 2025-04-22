@@ -4,6 +4,7 @@ An interactive, real-time platform for Scandinavian software developers to disco
 
 ## Table of Contents
 - [Description](#description)
+- [Domains](#domains)
 - [Technologies & Frameworks](#technologies--frameworks)
 - [Architecture Overview](#architecture-overview)
 - [Main Features](#main-features)
@@ -19,6 +20,16 @@ ScandevJobs allows developers to:
 - Track application status with live updates.
 - Chat with recruiters.
 - View job locations on an interactive map.
+
+## Domains
+- scandevjobs.com
+- scandevjobs.se
+- scandevjob.com
+- scandevjob.se
+- nordicdevjobs.com
+- nordicdevjobs.se
+- scanjobs.dev
+- scanjob.dev
 
 ## Technologies & Frameworks
 
