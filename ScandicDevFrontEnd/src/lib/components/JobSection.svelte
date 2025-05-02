@@ -1,6 +1,9 @@
 <script lang="ts">
     //import { onMount } from 'svelte';
-    import type { Joblisting } from '$lib/stores/JobListing';
+    import type { Joblisting } from '$lib/types/JobListing';
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+    const API_BASE_URL_BLOB = import.meta.env.VITE_API_BASE_URL_BLOB;
+
     export let jobs: Joblisting[] = [];
     // Removed duplicate declaration of jobs
     /* --- Top Level Filters --- */
@@ -112,7 +115,6 @@
   10+ => 5
   om för få jobb hittas >25 så sänker vi siffran ett steg tills antal jobb är minst 25 / 2 sidor av jobblistings
   -->
-
   <div class="job-section flex flex-col h-full">
     <!-- Header & Filters -->
     <header class="p-4 bg-base-200">
@@ -151,11 +153,13 @@
       <div class="job-listings flex-1 overflow-hidden" bind:this={jobContainer}>
         {#if displayedJobs.length > 0}
           {#each displayedJobs as job}
+ 
             <div class="job-card bg-base-300 flex items-center rounded-lg shadow p-4 h-[96px] mb-2">
               <!-- Company Logo -->
               <div class="mr-4">
                 <!-- TODO DEFAULT LOGO -->
-                <img src="http://127.0.0.1:10000/devstoreaccount1/uploads/Untitled.png" alt="{job.title}" class="w-16 h-16 object-contain" /> 
+
+                <img src= "{API_BASE_URL_BLOB}{job.company?.companyLogoGuid}" alt="{job.title}" class="w-16 h-16 object-contain" /> 
               </div>
               <!-- Job Information -->
               <div class="flex-grow">

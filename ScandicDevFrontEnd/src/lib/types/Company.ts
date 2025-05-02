@@ -4,7 +4,7 @@ export interface Company {
     email: string;
     isVerified: boolean;
     companySize: CompanySize;
-    companyLogoUrl?: string;
+    companyLogoGuid?: string;
     website?: string;
     contactEmail?: string;
     contactPhone?: string;

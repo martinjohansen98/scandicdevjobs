@@ -1,7 +1,7 @@
 // src/lib/types/JobListing.ts
-import type { User } from '$lib/stores/user';
-import type { Tag } from '$lib/stores/Tag';
-import type { Company } from '$lib/stores/Company';
+import type { User } from '$lib/types/user';
+import type { Tag } from '$lib/types/Tag';
+import type { Company } from '$lib/types/company';
 
 export interface Joblisting {
   id: number;

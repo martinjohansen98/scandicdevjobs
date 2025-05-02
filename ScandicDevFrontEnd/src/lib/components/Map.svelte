@@ -1,8 +1,12 @@
-<script lang="ts">
+﻿<script lang="ts">
   import { browser } from '$app/environment';
   import { onMount, onDestroy, tick } from 'svelte';
   import 'leaflet/dist/leaflet.css';
-  import type { Joblisting } from '$lib/stores/JobListing';
+  import type { Joblisting } from '$lib/types/JobListing';
+
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+  const API_BASE_URL_BLOB = import.meta.env.VITE_API_BASE_URL_BLOB;
+
   export let jobs: Joblisting[] = [];
 
 
@@ -21,7 +25,7 @@
   function createLogoIcon(url: string) {
     return L.divIcon({
       className: 'logo-marker',
-      html: `<img src="${url}" class="w-8 h-8 rounded-full border-2 border-white object-cover"/>`,
+      html: `<img src="${url}" class="w-12 h-12 rounded-full border-2 border-white object-cover"/>`,
       iconSize: [32, 32]
     });
   }
@@ -32,15 +36,16 @@
     markers = [];
 
     for (const job of jobs) {
-      const icon = map.getZoom() >= 12
-        ? createLogoIcon(job.company?.companyLogoUrl ?? '')
+      console.log(map.getZoom())
+      const icon = map.getZoom() >= 6
+        ? createLogoIcon(API_BASE_URL_BLOB + job.company?.companyLogoGuid)
         : createClusterIcon();
 
       const marker = L.marker([job.latitude, job.longitude], { icon });
       marker.bindPopup(
         `<div class="p-2">  
-           <h3 class="font-bold">${job.title}</h3>
-           <p>${job.company?.name}</p>
+           <h3 class="font-bold">${job.company?.name}</h3>
+           <p>${job.title}</p>
            <p class="text-sm">${job.address}</p>
          </div>`
       );

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import type { Joblisting } from '$lib/stores/JobListing';
+  import type { Joblisting } from '$lib/types/JobListing';
   import Navbar from '$lib/components/Navbar.svelte';
   import JobSection from '$lib/components/JobSection.svelte';
   import { jobList, fetchJobs } from '$lib/stores/jobListingStore';

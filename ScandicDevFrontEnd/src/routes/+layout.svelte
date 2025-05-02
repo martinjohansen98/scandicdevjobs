@@ -2,9 +2,9 @@
  and pages inherit. -->
  <script lang="ts">
   import "../app.css";
-  import { user, type User } from '$lib/stores/user';
+  import { user, type User } from '$lib/types/user';
   import { onMount, onDestroy } from 'svelte';
-  import { darkMode, themeName } from '$lib/stores/backgroundTheme';
+  import { darkMode, themeName } from '$lib/stores/backgroundThemeStore';
 
   export let data: { user: User | null };
 

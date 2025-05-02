@@ -1,10 +1,10 @@
 <!-- src/lib/Navbar.svelte -->
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { user, type User } from '$lib/stores/user';
+  import { user, type User } from '$lib/types/user';
   import { fade, scale } from 'svelte/transition';
   import { cubicOut } from 'svelte/easing';
-  import { darkMode } from '$lib/stores/backgroundTheme';
+  import { darkMode } from '$lib/stores/backgroundThemeStore';
 
   let activeLang = 'se';
   let showModal = false;
