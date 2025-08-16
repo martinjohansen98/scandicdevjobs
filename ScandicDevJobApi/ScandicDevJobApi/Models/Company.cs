@@ -1,4 +1,5 @@
 ﻿using ScandicDevJobApi.Models.Enums.Company;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace ScandicDevJobApi.Models
@@ -6,8 +7,10 @@ namespace ScandicDevJobApi.Models
     public class Company
     {
         public int Id { get; set; }
+        public int? OwnerId { get; set; }
+        [ForeignKey(nameof(OwnerId))]
+        public User? Owner { get; set; }
         public string? Name { get; set; }
-        public string? Email { get; set; } // Signup / login email
         public string? Description { get; set; }
         public bool IsVerified { get; set; }
         public Guid? CompanyLogoGuid { get; set; }
@@ -25,6 +28,8 @@ namespace ScandicDevJobApi.Models
         // Jobs Associated with Company
         [JsonIgnore]
         public List<JobListing>? JobListings { get; set; } // Jobs posted by this company
+
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     }
 }

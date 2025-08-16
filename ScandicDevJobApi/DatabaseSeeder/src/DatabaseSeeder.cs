@@ -16,13 +16,15 @@ namespace DatabaseSeeder
     {
         public static void Seed(AppDbContext context)
         {
+            var alice = new User { FirstName = "Alice", LastName = "Testtt", Email = "alice@example.com" };
+            var bob = new User { FirstName = "Bob", LastName = "Testtt", Email = "bob@example.com" };
+            var charlie = new User { FirstName = "Charlie", LastName = "Testtt", Email = "charlie@example.com" };
+            var david = new User { FirstName = "David", LastName = "Testtt", Email = "david@example.com" };
+            var eve = new User { FirstName = "Eve", LastName = "Testtt", Email = "eve@example.com" };
+
             var users = new List<User>
             {
-                new User { FirstName = "Alice", LastName = "Testtt", Email = "alice@example.com"},
-                new User { FirstName = "Bob", LastName = "Testtt", Email = "bob@example.com" },
-                new User { FirstName = "Charlie", LastName = "Testtt", Email = "charlie@example.com" },
-                new User { FirstName = "David", LastName = "Testtt", Email = "david@example.com" },
-                new User { FirstName = "Eve", LastName = "Testtt", Email = "eve@example.com" },
+                alice, bob, charlie, david, eve
             };
             if (!context.Users.Any())
             {
@@ -32,7 +34,7 @@ namespace DatabaseSeeder
             var techCorp = new Company
             {
                 Name = "TechCorp",
-                Email = "contact@techcorp.com",
+                Owner = alice,
                 IsVerified = true,
                 CompanySize = CompanySize.TenToFifty,
                 CompanyLogoGuid = new Guid(),
@@ -46,7 +48,7 @@ namespace DatabaseSeeder
             var devSoft = new Company
             {
                 Name = "DevSoft",
-                Email = "hr@devsoft.com",
+                Owner = bob,
                 IsVerified = false,
                 CompanySize = CompanySize.FiftyToHundred,
                 CompanyLogoGuid = new Guid(),
@@ -60,7 +62,7 @@ namespace DatabaseSeeder
             var innovateX = new Company
             {
                 Name = "InnovateX",
-                Email = "hello@innovatex.com",
+                Owner = charlie,
                 IsVerified = true,
                 CompanySize = CompanySize.HundredToFiveHundred,
                 CompanyLogoGuid = new Guid(),
@@ -74,7 +76,7 @@ namespace DatabaseSeeder
             var cloudNine = new Company
             {
                 Name = "CloudNine",
-                Email = "support@cloudnine.com",
+                Owner = david,
                 IsVerified = false,
                 CompanySize = CompanySize.OneToTen,
                 CompanyLogoGuid = new Guid(),
@@ -88,7 +90,7 @@ namespace DatabaseSeeder
             var cyberTech = new Company
             {
                 Name = "CyberTech",
-                Email = "info@cybertech.com",
+                Owner = eve,
                 IsVerified = true,
                 CompanySize = CompanySize.FiveHundredPlus,
                 CompanyLogoGuid = new Guid(),

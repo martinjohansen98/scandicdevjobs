@@ -12,8 +12,8 @@ using ScandicDevJobApi.Data;
 namespace ScandicDevJobApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250413191820_update_user2")]
-    partial class update_user2
+    [Migration("20250503160558_Initdb")]
+    partial class Initdb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,8 +48,8 @@ namespace ScandicDevJobApi.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("CompanyLogoUrl")
-                        .HasColumnType("text");
+                    b.Property<Guid?>("CompanyLogoGuid")
+                        .HasColumnType("uuid");
 
                     b.Property<int?>("CompanySize")
                         .HasColumnType("integer");
@@ -60,10 +60,10 @@ namespace ScandicDevJobApi.Migrations
                     b.Property<string>("ContactPhone")
                         .HasColumnType("text");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Email")
+                    b.Property<string>("Description")
                         .HasColumnType("text");
 
                     b.Property<string>("Facebook")
@@ -78,6 +78,9 @@ namespace ScandicDevJobApi.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
+                    b.Property<int?>("OwnerId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Twitter")
                         .HasColumnType("text");
 
@@ -85,6 +88,9 @@ namespace ScandicDevJobApi.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OwnerId")
+                        .IsUnique();
 
                     b.ToTable("Companies");
                 });
@@ -220,6 +226,9 @@ namespace ScandicDevJobApi.Migrations
                     b.Property<string>("Password")
                         .HasColumnType("text");
 
+                    b.Property<int?>("Role")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.ToTable("Users");
@@ -240,6 +249,15 @@ namespace ScandicDevJobApi.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ScandicDevJobApi.Models.Company", b =>
+                {
+                    b.HasOne("ScandicDevJobApi.Models.User", "Owner")
+                        .WithOne("Company")
+                        .HasForeignKey("ScandicDevJobApi.Models.Company", "OwnerId");
+
+                    b.Navigation("Owner");
+                });
+
             modelBuilder.Entity("ScandicDevJobApi.Models.JobListing", b =>
                 {
                     b.HasOne("ScandicDevJobApi.Models.Company", "Company")
@@ -258,6 +276,11 @@ namespace ScandicDevJobApi.Migrations
             modelBuilder.Entity("ScandicDevJobApi.Models.Company", b =>
                 {
                     b.Navigation("JobListings");
+                });
+
+            modelBuilder.Entity("ScandicDevJobApi.Models.User", b =>
+                {
+                    b.Navigation("Company");
                 });
 #pragma warning restore 612, 618
         }
