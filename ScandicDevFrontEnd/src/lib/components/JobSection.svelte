@@ -20,7 +20,57 @@
     // Design?
     // Business?
 
-    let topFilters = [
+    // top levels, domain, backend, frontend, ux, security, business ai/ml
+    let domainTags = {}; // embedded, cloud, iot, web, gameDev,
+
+    // languases: python, c#/.net etc
+    let programingLanguages = [ 
+  { id: 1, label: 'JavaScript', icon: '🌐' },
+  { id: 2, label: 'Python', icon: '🐍' },
+  { id: 3, label: 'Java', icon: '☕' },
+  { id: 4, label: 'C#', icon: '🔷' },
+  { id: 5, label: 'C++', icon: '💻' },
+  { id: 6, label: 'TypeScript', icon: '🔡' },
+  { id: 7, label: 'Go', icon: '🐹' },
+  { id: 8, label: 'SQL', icon: '🗄️' },
+  { id: 9, label: 'PHP', icon: '🐘' },
+  { id: 10, label: 'Rust', icon: '🦀' },
+  { id: 11, label: 'Kotlin', icon: '📱' },
+  { id: 12, label: 'Swift', icon: '🍎' },
+  { id: 13, label: 'Ruby', icon: '💎' },
+  { id: 14, label: 'C', icon: '🔧' },
+  { id: 15, label: 'Dart', icon: '🎯' },
+  { id: 16, label: 'Scala', icon: '🔺' },
+  { id: 17, label: 'Perl', icon: '🐪' },
+  { id: 18, label: 'R', icon: '📊' },
+  { id: 19, label: 'Shell', icon: '🐚' },
+  { id: 20, label: 'MATLAB', icon: '📐' },
+  { id: 21, label: 'Haskell', icon: '🔣' },
+  { id: 22, label: 'Elixir', icon: '⚗️' },
+  { id: 23, label: 'Assembly', icon: '⚙️' },
+  { id: 24, label: 'Objective-C', icon: '🍏' },
+  { id: 25, label: 'F#', icon: '🎼' },
+  { id: 26, label: 'Lua', icon: '🌙' },
+  { id: 27, label: 'Julia', icon: '📈' },
+  { id: 28, label: 'COBOL', icon: '🏦' },
+  { id: 29, label: 'VB.NET', icon: '🖥️' },
+  { id: 30, label: 'Groovy', icon: '🎷' },
+  { id: 31, label: 'Erlang', icon: '📡' },
+  { id: 32, label: 'Fortran', icon: '📘' },
+  { id: 33, label: 'Ada', icon: '🚀' },
+  { id: 34, label: 'Crystal', icon: '🔮' },
+  { id: 35, label: 'Nim', icon: '🐝' },
+  { id: 36, label: 'V', icon: '📦' },
+  { id: 37, label: 'Bash', icon: '💻' },
+  { id: 38, label: 'PowerShell', icon: '⚡' },
+  { id: 39, label: 'Delphi', icon: '🏛️' },
+  { id: 40, label: 'Lisp', icon: '🧠' }
+]; 
+
+    let frontEndTags = {}; // framworks and lans, html, css, react, vue, svelte etc
+
+    let topFilters: { id: number; label: string; icon: string }[] = [
+      // programingLanguages,
       { id: 0,        label: 'Java',      icon: '☕' },
       { id: 1,        label: 'C#/.NET',   icon: '🔷' },
       { id: 0,        label: 'C/C++',     icon: '💻' },
@@ -44,6 +94,8 @@
       { id: 0,        label: 'GameDev',   icon: '🎮' },
       { id: 0,        label: 'QA/Test',   icon: '🧪' }
     ];
+
+
     let activeTopFilters: number[] = [];
     function toggleTopFilter(id: number) {
       if (activeTopFilters.includes(id)) {
@@ -97,7 +149,7 @@
       currentPage = page;
     }
   </script>
-  
+
   <!--TODO förslag vi sparar en siffra som motsvarar % av alla filter och försöker matcha så minst % av alla valda filter är inkluderade,
   denna n% kan följa en algoritm så att ju fler filter man klickar i ju färre bör vara inkluderade, 
   med detta kan vi hävda vi har en nytänkande algoritm för att matcha kandidater med jobblistings XD
@@ -129,7 +181,7 @@
             <span>{filter.label}</span>
           </button>
         {/each}
-      </nav>
+          </nav>
       <!-- City Filters -->
       <nav class="flex space-x-4">
         <button
@@ -158,8 +210,10 @@
               <!-- Company Logo -->
               <div class="mr-4">
                 <!-- TODO DEFAULT LOGO -->
+                <div class="w-16 h-16 rounded-lg overflow-hidden flex items-center justify-center">
+                  <img src= "{API_BASE_URL_BLOB}{job.company?.companyLogoGuid}" alt="{job.title}" class="w-20 h-20 object-cover object-center" /> 
 
-                <img src= "{API_BASE_URL_BLOB}{job.company?.companyLogoGuid}" alt="{job.title}" class="w-16 h-16 object-contain" /> 
+                </div>
               </div>
               <!-- Job Information -->
               <div class="flex-grow">
@@ -204,6 +258,9 @@
     .job-listings {
       flex: 1;
     }
-    /* Additional styling can be added here */
+    .dropdown:hover .dropdown-menu {
+      display: block;
+    }
+      /* Additional styling can be added here */
   </style>
   

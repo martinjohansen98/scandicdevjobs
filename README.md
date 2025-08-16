@@ -2,6 +2,27 @@
 
 An interactive, real-time platform for Scandinavian software developers to discover, apply for, and engage with job opportunities. Beyond static listings, ScandevJobs emphasizes user-generated data, live notifications, and community-driven insights to create a dynamic and engaging job-hunting experience. Our primary objective is to create a software‑developer job market in scandinavia that’s both highly transparent and easily accessible.
 
+## Important stuff to start the app
+###Update Database
+
+Update local database with exisiting migrations:
+in the nuget package manager console: 
+Update-Database
+
+Create new database migration, (when changes are made to the datamodel)
+Add-Migration NameOfMigration (first letter should be capital)
+
+###AZURE storage blob
+install:
+npm install -g azurite
+
+debug with:
+azurite --location c:\azurite --debug c:\azurite\debug.log
+
+run with:
+
+azurite --silent --location C:\path\to\your\data
+
 ## Table of Contents
 - [Description](#description)
 - [Domains](#domains)

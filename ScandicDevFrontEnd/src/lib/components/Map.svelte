@@ -25,11 +25,16 @@
   function createLogoIcon(url: string) {
     return L.divIcon({
       className: 'logo-marker',
-      html: `<img src="${url}" class="w-12 h-12 rounded-full border-2 border-white object-cover"/>`,
+      html: `
+        <div class="w-10 h-10 rounded-full border-2 border-white overflow-hidden flex items-center justify-center bg-white">
+
+      <img src="${url}" class="w-20 h-20 object-cover object-center"/>
+      </div>
+      `,
       iconSize: [32, 32]
     });
   }
-
+  // w-12 h-12 rounded-full border-2 border-white object-cover
   function updateMarkers() {
     if (!map) return;
     markers.forEach(m => m.remove());
