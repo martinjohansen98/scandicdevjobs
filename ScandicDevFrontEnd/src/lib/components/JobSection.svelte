@@ -208,12 +208,13 @@
         {#each programingLanguages as filter}
         <button
         on:click={() => toggleTopFilter(filter.id)}
-        class="flex items-center p-2 rounded  transition-colors duration-200  {activeTopFilters.includes(filter.id) ? 'bg-blue-500 text-white' : ''}">
+        class="flex items-center p-2 rounded  transition-colors duration-200 w-15 justify-center {activeTopFilters.includes(filter.id) ? 'bg-blue-500 text-white' : ''}">
         
         <div class="flex flex-col">
           <img src={filter.icon} alt={filter.label} class="m-auto w-8 h-8 mb-1" />
           <span class="text-xs text-blue-200">{filter.label}</span>
         </div>
+
         <!-- <span>{filter.label}</span> -->
           </button>
         {/each}
