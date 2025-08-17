@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.JsonWebTokens;
 using ScandicDevJobApi.Data;
 using ScandicDevJobApi.Models;
 
@@ -24,52 +21,58 @@ namespace ScandicDevJobApi.Controllers
         // GET: api/Company
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Company>>> GetCompanies()
-        {
-            return await _context.Companies
-                .ToListAsync();
-        }
+            => await _context.Companies.ToListAsync();
 
         // GET: api/Company/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Company>> GetCompany(int id)
         {
             var company = await _context.Companies.FindAsync(id);
+            return company is null ? NotFound() : company;
+        }
 
-            if (company == null)
-            {
-                return NotFound();
-            }
+        // GET: api/Company/me
+        [HttpGet("me")]
+        public async Task<ActionResult<Company>> GetMyCompany()
+        {
+            // 1) grab JWT from cookie
+            if (!Request.Cookies.TryGetValue("jwt", out var token) || string.IsNullOrEmpty(token))
+                return Unauthorized();
 
-            return company;
+            // 2) decode
+            var handler = new JsonWebTokenHandler();
+            JsonWebToken jwt;
+            try { jwt = handler.ReadJsonWebToken(token); }
+            catch { return Unauthorized(); }
+
+            // 3) get userId claim
+            var idClaim = jwt.GetPayloadValue<string>(ClaimTypes.NameIdentifier);
+            if (!int.TryParse(idClaim, out var userId))
+                return Unauthorized();
+
+            // 4) lookup company by OwnerId
+            var company = await _context.Companies
+                .FirstOrDefaultAsync(c => c.OwnerId == userId);
+
+            return company is null ? NotFound() : Ok(company);
         }
 
         // PUT: api/Company/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCompany(int id, Company company)
         {
-            if (id != company.Id)
-            {
-                return BadRequest();
-            }
+            if (id != company.Id) return BadRequest();
 
             _context.Entry(company).State = EntityState.Modified;
-
             try
             {
-                //company.CompanyLogoGuid = ; // TODO fix so that upload is possible on creating
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CompanyExists(id))
-                {
+                if (!_context.Companies.Any(e => e.Id == id))
                     return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                throw;
             }
 
             return NoContent();
@@ -92,20 +95,11 @@ namespace ScandicDevJobApi.Controllers
         public async Task<IActionResult> DeleteCompany(int id)
         {
             var company = await _context.Companies.FindAsync(id);
-            if (company == null)
-            {
-                return NotFound();
-            }
+            if (company == null) return NotFound();
 
             _context.Companies.Remove(company);
             await _context.SaveChangesAsync();
-
             return NoContent();
-        }
-
-        private bool CompanyExists(int id)
-        {
-            return _context.Companies.Any(e => e.Id == id);
         }
     }
 }

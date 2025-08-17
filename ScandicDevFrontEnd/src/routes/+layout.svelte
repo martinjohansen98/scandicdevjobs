@@ -8,7 +8,7 @@
 
   export let data: { user: User | null };
 
-  user.set(data.user);
+  $: user.set(data.user);
 
   // Unsubscribe handles
   let off1: () => void;

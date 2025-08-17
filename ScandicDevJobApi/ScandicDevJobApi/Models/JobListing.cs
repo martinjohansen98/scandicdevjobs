@@ -1,5 +1,6 @@
 ﻿using ScandicDevJobApi.Models.Enums.Company;
 using ScandicDevJobApi.Models.Enums.JobListing;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ScandicDevJobApi.Models
 {
@@ -9,6 +10,8 @@ namespace ScandicDevJobApi.Models
         public int Id { get; set; }
         public string? Title { get; set; }
         public string? Description { get; set; }
+        public int OwnerId { get; set; }
+        [ForeignKey(nameof(OwnerId))]
         public User? Owner { get; set; }
         public List<Tag>? Tags { get; set; }
         public string? Category { get; set; }
@@ -17,7 +20,8 @@ namespace ScandicDevJobApi.Models
         public bool IsPublished { get; set; } // Determines if the job is publicly visible
         public int NumberOfApplicants { get; set; } = 0;
 
-        // Company
+        public int? CompanyId { get; set; }
+        [ForeignKey(nameof(CompanyId))]
         public Company? Company { get; set; }
         public string? ContactEmail { get; set; }
         public string? ApplicationUrl { get; set; }

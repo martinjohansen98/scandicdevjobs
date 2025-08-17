@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.JsonWebTokens;
 using ScandicDevJobApi.Data;
+using ScandicDevJobApi.Dtos;
 using ScandicDevJobApi.Models;
 
 namespace ScandicDevJobApi.Controllers
@@ -109,6 +112,53 @@ namespace ScandicDevJobApi.Controllers
         private bool JobListingExists(int id)
         {
             return _context.Joblistings.Any(e => e.Id == id);
+        }
+
+        [HttpPost("create")]
+        public async Task<ActionResult<JobListing>> Create(JobListingCreateDto dto)
+        {
+            // get the current user‐ID from the cookie/JWT
+            if (!Request.Cookies.TryGetValue("jwt", out var token))
+                return Unauthorized();
+
+            var handler = new JsonWebTokenHandler();
+            var jwt = handler.ReadJsonWebToken(token);
+            var idClaim = jwt.GetPayloadValue<string>(ClaimTypes.NameIdentifier);
+            if (!int.TryParse(idClaim, out var ownerId))
+                return Unauthorized();
+
+            var company = await _context.Companies
+                .FirstOrDefaultAsync(c => c.OwnerId == ownerId);
+            if (company == null)
+                return BadRequest("You must have a verified company to post jobs.");
+
+            var job = new JobListing
+            {
+                OwnerId = ownerId,
+                CompanyId = company.Id,
+                Title = dto.Title,
+                Description = dto.Description,
+                Tags = dto.Tags.Select(t => new Tag { Name = t }).ToList(),
+                Category = dto.Category,
+                EmploymentType = dto.EmploymentType,
+                WorkMode = dto.WorkMode,
+                IsPublished = dto.IsPublished,
+                ContactEmail = dto.ContactEmail,
+                ApplicationUrl = dto.ApplicationUrl,
+                Currency = dto.Currency,
+                SalaryRangeMin = dto.SalaryRangeMin,
+                SalaryRangeMax = dto.SalaryRangeMax,
+                Address = dto.Address,
+                City = dto.City,
+                Country = dto.Country,
+                JobListingExpiryDate = dto.JobListingExpiryDate?.ToUniversalTime(),
+                ApplicationDeadline = dto.ApplicationDeadline?.ToUniversalTime(),
+                CreatedDate = DateTimeOffset.UtcNow
+            };
+
+            _context.Joblistings.Add(job);
+            await _context.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetJobListing), new { id = job.Id }, job);
         }
     }
 }

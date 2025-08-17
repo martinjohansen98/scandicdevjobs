@@ -5,6 +5,7 @@
   import { fade, scale } from 'svelte/transition';
   import { cubicOut } from 'svelte/easing';
   import { darkMode } from '$lib/stores/backgroundThemeStore';
+  import { invalidateAll } from '$app/navigation';
 
   let activeLang = 'se';
   let showModal = false;
@@ -19,7 +20,13 @@
   let confirmEmail = '';
   let password = '';
   let confirmPassword = '';
-  
+
+  let companyName = '';
+  let companyWebsite = '';
+  let companyDescription = '';
+  let companyContactEmail = '';
+  let companyContactPhone = '';
+
   function setLanguage(lang: string) {
     activeLang = lang;
   }
@@ -51,22 +58,9 @@ async function handleSubmit() {
   loading = true;
   try {
     let res;
-    if (selectedTab === 'register') {
-      if (email !== confirmEmail) {
-        alert("Emails do not match!");
-        return;
-      }
-      if (password !== confirmPassword) {
-        alert("Passwords do not match!");
-        return;
-      }
-      res = await fetch('/api/Users/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ firstName, lastName, email, password })
-      });
-    } else {
+
+    if (selectedTab === 'login') {
+      // ── LOGIN FLOW ──
       res = await fetch('/api/Users/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -74,11 +68,68 @@ async function handleSubmit() {
         body: JSON.stringify({ email, password })
       });
     }
+    else if (selectedTab === 'register') {
+      // ── USER SIGN-UP FLOW ──
+      if (email !== confirmEmail) {
+        alert("Emails do not match!");
+        loading = false;
+        return;
+      }
+      if (password !== confirmPassword) {
+        alert("Passwords do not match!");
+        loading = false;
+        return;
+      }
+      res = await fetch('/api/Users/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          email,
+          password
+        })
+      });
+    }
+    else {
+      // ── COMPANY SIGN-UP FLOW ──
+      if (email !== confirmEmail) {
+        alert("Emails do not match!");
+        loading = false;
+        return;
+      }
+      if (password !== confirmPassword) {
+        alert("Passwords do not match!");
+        loading = false;
+        return;
+      }
+      // you could also validate companyName, website, etc. here
+      res = await fetch('/api/Users/company/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          Email:           email,
+          Password:        password,
+          CompanyName:     companyName,
+          Website:         companyWebsite,
+          Description:     companyDescription,
+          ContactEmail:    companyContactEmail,
+          ContactPhone:    companyContactPhone
+        })
+      });
+    }
 
-    if (!res.ok) throw new Error(await res.text());
+  if (!res.ok) {
+    // now you’ll get your BadRequest("Email already in use") or other error
+    const text = await res.text();
+    alert(text || 'Company signup failed');
+  } else {
     user.set(await res.json());
     showModal = false;
-    selectedTab = 'login';
+    await invalidateAll();
+  }
 
     // Reset form
     firstName = lastName = email = confirmEmail = password = confirmPassword = '';
@@ -127,10 +178,19 @@ async function handleSubmit() {
 <nav class="red p-4 shadow">
   <div class="flex justify-between items-center w-full px-4">
     <a href="/" class="flex items-center space-x-2 text-xl font-bold">
-      <img src="Webicon.png" alt="Logo" class="h-12 w-12" />
+      <img src="/Webicon.png" alt="Logo" class="h-12 w-12" />
       <span>ScanDevJobs</span>
     </a>
+
     <ul class="flex items-center space-x-4">
+      {#if $user?.role === 'Company'}
+        <li>
+          <a href="/company/create-joblisting" class="hover:underline">
+            Create Joblisting
+          </a>
+        </li>
+      {/if}
+
       <li class="flex items-center">
         <button
           on:click={toggleDarkMode}
@@ -162,11 +222,13 @@ async function handleSubmit() {
           </span>
         </button>
       </li>
+
       <!-- Navigation Links -->
       <li><a href="/" class="hover:underline">Home</a></li>
       <li><a href="/about" class="hover:underline">About</a></li>
       <li><a href="/services" class="hover:underline">Services</a></li>
       <li><a href="/contact" class="hover:underline">Contact</a></li>
+
       <!-- Language Buttons -->
       <li>
         <div class="flex space-x-2">
@@ -269,6 +331,13 @@ async function handleSubmit() {
             class:border-blue-500={selectedTab === 'register'}>
             Register
           </button>
+          <button
+            on:click={() => selectedTab = 'company-signup'}
+            class="px-4 py-2 rounded-t border-b-2 font-semibold transition"
+            class:bg-gray-100={selectedTab === 'company-signup'}
+            class:border-blue-500={selectedTab === 'company-signup'}>
+            Register (Company)
+           </button>
         </div>
 
         <!-- Form Content -->
@@ -294,7 +363,31 @@ async function handleSubmit() {
                 Register
               {/if}
             </button>
-            {:else}
+          {:else if selectedTab === 'company-signup'}
+            <!-- Company Register Form -->
+            <input type="text" placeholder="Company Name"     bind:value={companyName}     required class="w-full p-2 border rounded" />
+            <input type="text" placeholder="Website (e.g. acme.com)" bind:value={companyWebsite} required class="w-full p-2 border rounded" />
+            <textarea placeholder="Description" bind:value={companyDescription} class="w-full p-2 border rounded"></textarea>
+            <input type="email" placeholder="Contact Email" bind:value={companyContactEmail} required class="w-full p-2 border rounded" />
+            <input type="tel" placeholder="Contact Phone"   bind:value={companyContactPhone} class="w-full p-2 border rounded" />
+            <!-- then same fields as user signup -->
+            <input type="email" placeholder="Your Email"           bind:value={email}        required class="w-full p-2 border rounded" />
+            <input type="email" placeholder="Confirm email address" bind:value={confirmEmail} required class="w-full p-2 border rounded"/>
+            <input type="password" placeholder="Password"           bind:value={password}     required class="w-full p-2 border rounded" />
+              <input type="password" placeholder="Confirm password" bind:value={confirmPassword} required class="w-full p-2 border rounded"/>
+            <button type="submit" class="w-full py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition" disabled={loading}>
+              {#if loading}
+                <svg class="animate-spin h-5 w-5 text-white mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                </svg>
+                Loading...
+              {:else}
+                Register Company Account
+              {/if}
+            </button>
+
+          {:else}
             <!-- Login Form -->
             <input type="email" placeholder="Email address" bind:value={email} required class="w-full p-2 border rounded" />
             <input type="password" placeholder="Password" bind:value={password} required class="w-full p-2 border rounded" />
