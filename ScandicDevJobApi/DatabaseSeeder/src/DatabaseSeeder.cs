@@ -8,6 +8,7 @@ using ScandicDevJobApi.Models.Enums.JobListing;
 using ScandicDevJobApi.Models.Enums.Tag;
 using ScandicDevJobApi.Models;
 using System.Text.Json.Serialization;
+using ScandicDevJobApi.Models.Enums.User;
 
 
 namespace DatabaseSeeder
@@ -16,11 +17,11 @@ namespace DatabaseSeeder
     {
         public static void Seed(AppDbContext context)
         {
-            var alice = new User { FirstName = "Alice", LastName = "Testtt", Email = "alice@example.com" };
-            var bob = new User { FirstName = "Bob", LastName = "Testtt", Email = "bob@example.com" };
-            var charlie = new User { FirstName = "Charlie", LastName = "Testtt", Email = "charlie@example.com" };
-            var david = new User { FirstName = "David", LastName = "Testtt", Email = "david@example.com" };
-            var eve = new User { FirstName = "Eve", LastName = "Testtt", Email = "eve@example.com" };
+            var alice = new User { FirstName = "Alice", LastName = "Testtt", Email = "alice@example.com", Role = UserRole.User };
+            var bob = new User { FirstName = "Bob", LastName = "Testtt", Email = "bob@example.com", Role = UserRole.User };
+            var charlie = new User { FirstName = "Charlie", LastName = "Testtt", Email = "charlie@example.com", Role = UserRole.User };
+            var david = new User { FirstName = "David", LastName = "Testtt", Email = "david@example.com", Role = UserRole.User };
+            var eve = new User { FirstName = "Eve", LastName = "Testtt", Email = "eve@example.com", Role = UserRole.Company };
 
             var users = new List<User>
             {

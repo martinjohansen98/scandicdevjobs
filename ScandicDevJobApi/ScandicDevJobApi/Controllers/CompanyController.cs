@@ -78,8 +78,9 @@ namespace ScandicDevJobApi.Controllers
         // POST: api/Company
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Company>> PostCompany(Company company)
+        public async Task<ActionResult<Company>> PostCompany(Company company )
         {
+
             _context.Companies.Add(company);
             await _context.SaveChangesAsync();
 
