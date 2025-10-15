@@ -2,6 +2,7 @@
 using ScandicDevJobApi.Data;
 using ScandicDevJobApi.filters;
 using ScandicDevJobApi.Models.Azure;
+using ScandicDevJobApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,9 +44,13 @@ builder.Services.Configure<AzureBlobStorageSettings>(
 );
 builder.Services.AddSingleton<AzureBlobStorageService>();
 
-
-
-
+// Geocoding service
+builder.Services.AddHttpClient<IGeocodingService, NominatimGeocodingService>(client =>
+{
+    client.BaseAddress = new Uri("https://nominatim.openstreetmap.org/");
+    client.DefaultRequestHeaders.UserAgent.ParseAdd("ScandicDevJobs/1.0 (contact:)");
+    client.Timeout = TimeSpan.FromSeconds(10);
+});
 
 var app = builder.Build();
 

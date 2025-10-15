@@ -122,7 +122,6 @@ async function handleSubmit() {
     }
 
   if (!res.ok) {
-    // now you’ll get your BadRequest("Email already in use") or other error
     const text = await res.text();
     alert(text || 'Company signup failed');
   } else {

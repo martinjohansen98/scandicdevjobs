@@ -43,7 +43,6 @@ namespace ScandicDevJobApi.Models
         public DateTimeOffset? UpdatedDate { get; set; }
         public DateTimeOffset? JobListingExpiryDate { get; set; }
         public DateTimeOffset? ApplicationDeadline { get; set; }
-
-
+        public Guid? LogoFileId { get; set; }
     }
 }

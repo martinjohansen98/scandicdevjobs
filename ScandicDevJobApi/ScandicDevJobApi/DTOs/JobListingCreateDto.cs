@@ -20,6 +20,7 @@ namespace ScandicDevJobApi.Dtos
         string City,
         string Country,
         DateTimeOffset? JobListingExpiryDate,
-        DateTimeOffset? ApplicationDeadline
+        DateTimeOffset? ApplicationDeadline,
+        Guid? LogoFileId
     );
 }

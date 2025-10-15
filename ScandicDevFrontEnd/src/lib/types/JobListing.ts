@@ -1,7 +1,6 @@
-// src/lib/types/JobListing.ts
 import type { User } from '$lib/types/user';
 import type { Tag } from '$lib/types/Tag';
-import type { Company } from '$lib/types/company';
+import type { Company } from '$lib/types/Company';
 
 export interface Joblisting {
   id: number;
@@ -14,6 +13,7 @@ export interface Joblisting {
   workMode: WorkMode;
   isPublished: boolean;
   numberOfApplicants: number;
+  logoFileId?: string;
 
   // Company-related fields
   company?: Company;
@@ -33,8 +33,8 @@ export interface Joblisting {
   longitude?: number;
 
   // Dates
-  createdDate?: string; // ISO string representation of DateTimeOffset
-  updatedDate?: string; // ISO string representation of DateTimeOffset
-  jobListingExpiryDate?: string; // ISO string representation of DateTimeOffset
-  applicationDeadline?: string; // ISO string representation of DateTimeOffset
+  createdDate?: string;
+  updatedDate?: string;
+  jobListingExpiryDate?: string;
+  applicationDeadline?: string;
 }

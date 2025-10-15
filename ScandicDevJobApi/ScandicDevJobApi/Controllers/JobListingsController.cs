@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +6,12 @@ using Microsoft.IdentityModel.JsonWebTokens;
 using ScandicDevJobApi.Data;
 using ScandicDevJobApi.Dtos;
 using ScandicDevJobApi.Models;
+using ScandicDevJobApi.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace ScandicDevJobApi.Controllers
 {
@@ -19,12 +20,12 @@ namespace ScandicDevJobApi.Controllers
     public class JoblistingsController : ControllerBase
     {
         private readonly AppDbContext _context;
-        //private readonly IMapper _mapper;
+        private readonly IGeocodingService _geocoder;
 
-        public JoblistingsController(AppDbContext context)/*  IMapper mapper*/
+        public JoblistingsController(AppDbContext context, IGeocodingService geocoder)
         {
             _context = context;
-            //_mapper = mapper;
+            _geocoder = geocoder;
         }
 
         // GET: api/JobListings
@@ -83,7 +84,6 @@ namespace ScandicDevJobApi.Controllers
         }
 
         // POST: api/JobListings
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<JobListing>> PostJobListing(JobListing jobListing)
         {
@@ -132,6 +132,10 @@ namespace ScandicDevJobApi.Controllers
             if (company == null)
                 return BadRequest("You must have a verified company to post jobs.");
 
+            var addressParts = new[] { dto.Address, dto.City, dto.Country }
+                .Where(s => !string.IsNullOrWhiteSpace(s));
+            var fullAddress = string.Join(", ", addressParts);
+
             var job = new JobListing
             {
                 OwnerId = ownerId,
@@ -153,8 +157,20 @@ namespace ScandicDevJobApi.Controllers
                 Country = dto.Country,
                 JobListingExpiryDate = dto.JobListingExpiryDate?.ToUniversalTime(),
                 ApplicationDeadline = dto.ApplicationDeadline?.ToUniversalTime(),
-                CreatedDate = DateTimeOffset.UtcNow
+                CreatedDate = DateTimeOffset.UtcNow,
+                LogoFileId = dto.LogoFileId
             };
+
+            if (!string.IsNullOrWhiteSpace(fullAddress) &&
+                (job.Latitude is null || job.Longitude is null))
+            {
+                var pt = await _geocoder.GeocodeAsync(fullAddress, HttpContext.RequestAborted);
+                if (pt is not null)
+                {
+                    job.Latitude = pt.Value.lat;
+                    job.Longitude = pt.Value.lon;
+                }
+            }
 
             _context.Joblistings.Add(job);
             await _context.SaveChangesAsync();

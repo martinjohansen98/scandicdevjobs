@@ -37,6 +37,7 @@ public class BlobController : ControllerBase
 
     [HttpPost("upload")]
     [Consumes("multipart/form-data")]
+    [Produces("application/json")]
     public async Task<IActionResult> UploadLogo(IFormFile file) // [FromForm]
     {
 
@@ -48,11 +49,7 @@ public class BlobController : ControllerBase
             var stream = file.OpenReadStream();
             var fileId = await _blobService.UploadFileAsync(stream, file.ContentType);
 
-            return Ok(new
-            {
-                FileName = file.FileName,
-                BlobUrl = fileId
-            });
+            return Ok(new { fileId, fileName = file.FileName });
         }
         catch (Exception ex)
         {
